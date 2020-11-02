@@ -1,0 +1,11 @@
+graph TD
+    Uninitialized-- OpenChannel --> Operable
+    Uninitialized-- MigrateChannelFrom --> Operable
+    Operable-- CooperativeSettle --> Closed
+    Operable-- IntendSettle --> Settling
+    Settling -- ConfirmSettleFail --> Operable
+    Settling -- IntendSettle --> Settling
+    Settling -- CooperativeSettle --> Closed
+    Settling -- ConfirmSettle --> Closed
+    Settling -- MigrateChannelTo --> Migrated
+    Operable-- MigrateChannelTo --> Migrated

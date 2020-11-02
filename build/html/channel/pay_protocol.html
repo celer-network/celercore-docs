@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CelerPay Off-Chain Protocol &mdash; CelerCore  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CelerApp Contracts and Protocol" href="app.html" />
+    <link rel="prev" title="CelerPay On-Chain Contracts" href="pay_contracts.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> CelerCore
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html">Layer-2 Blockchain Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html#what-is-celer">What is Celer?</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Channel Network</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Celer Channel Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pay_contracts.html">CelerPay On-Chain Contracts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CelerPay Off-Chain Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#single-hop-operations">Single-Hop Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#send-conditional-payment">Send Conditional Payment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#settle-conditional-payment">Settle Conditional Payment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sliding-window-protocol">Sliding Window Protocol</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#end-to-end-protocols">End-to-End Protocols</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pay-with-boolean-conditions">Pay with Boolean Conditions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#properties-of-payment-with-boolean-conditions">Properties of payment with boolean conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#set-up-end-to-end-conditional-payment">Set up end-to-end conditional payment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#source-pays-in-full-amount-on-true-outcome">Source pays in full amount on true outcome</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#destination-rejects-the-payment-on-false-outcome">Destination rejects the payment on false outcome</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dispute-the-payment-on-chain">Dispute the payment on-chain</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#clear-expired-pays">Clear expired pays</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pay-with-numeric-conditions">Pay with Numeric Conditions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#properties-of-payment-with-numeric-conditions">Properties of payment with numeric conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#set-up-end-to-end-numeric-conditional-payment">Set up end-to-end numeric conditional payment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#settle-the-payment-hop-by-hop-upstream">Settle the payment hop-by-hop upstream</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dispute-the-payment-with-vouched-result">Dispute the payment with vouched result</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">CelerApp Contracts and Protocol</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Guardian Network</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/availability.html">Off-Chain Availability Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/architecture.html">SGN Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/guardian.html">SGN as Channel Guardian</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Liquidity Backing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/problem.html">State Channel Liquidity Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/backing.html">Celer Liquidity Backing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CelerCore</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>CelerPay Off-Chain Protocol</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/channel/pay_protocol.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="celerpay-off-chain-protocol">
+<h1>CelerPay Off-Chain Protocol<a class="headerlink" href="#celerpay-off-chain-protocol" title="Permalink to this headline">¶</a></h1>
+<p>This section presents both the hop-by-hop and end-to-end protocols used for CelerPay off-chain payments. CelerPay achieves high-performance at both levels through two design decisions:</p>
+<ul class="simple">
+<li>At hop-by-hop level, by decoupling the shared payment channel into two unidirectional simplex states, two peers can send off-chain payments to each other concurrently at high speed.</li>
+<li>At end-to-end level, by decoupling the payment and app state channels, the overhead of multi-hop payment is minimized so that the off-chain network can easily scale out.</li>
+</ul>
+<p>The rest of this page elaborates how the payment channel peers quickly update their off-chain states, and how the payment network efficiently delivers the multi-hop conditional payments.</p>
+<p>The CelerPay off-chain protocol is implemented as a part of the <a class="reference external" href="./overview.html#system-architecture">CelerNode</a>. An open-source, production-quality implementation of CelerNode can be found at <a class="reference external" href="https://github.com/celer-network/goCeler-oss">goCeler-oss</a>.</p>
+<hr class="docutils" />
+<div class="section" id="single-hop-operations">
+<h2>Single-Hop Operations<a class="headerlink" href="#single-hop-operations" title="Permalink to this headline">¶</a></h2>
+<p>Single-hop conditional payment is the basic primitive for CelerPay mulit-hop payment network. It is the foundation of Celer Network’s high performance, robustness, and flexibility. It is critical first to understand the single-hop <a class="reference external" href="./pay_contracts.html#core-data-structures">conditional payment data structure</a> and the single-hop messaging protocol described in this section before learning about more complex constructs.</p>
+<p>As described previously, CelerPay uses a <a class="reference external" href="./pay_contracts.html#duplex-payment-channel">full-duplex channel model</a> to maximize off-chain transaction throughput. If the channel model were two peers sharing a struct with a single sequence number, then the peers have to share a lock to make sure they do not update the channel state at the same time, which would greatly limit the off-chain performance.</p>
+<p>By using the duplex channel with two unidirectional channels with independent sequence numbers, the peers can send payments to each other by updating different simplex states at the same time. To eliminate concurrency conflict, the CelerPay protocol only allows the <em>peer_from</em> (field 2) of the <a class="reference external" href="./pay_contracts.html#simplex-channel-state">simplex payment channel</a> to initiate the update of the simplex state. The off-chain state updates should always follow the same pattern: 1) <em>peer_from</em> sends a new state with its own signature to the other peer; 2) the other peer verifies the state and replies with the co-signed new state.</p>
+<p>The single-hop operations in two directions of a payment channel are symmetric. Therefore, this section only presents the operations in one direction.</p>
+<div class="section" id="send-conditional-payment">
+<h3>Send Conditional Payment<a class="headerlink" href="#send-conditional-payment" title="Permalink to this headline">¶</a></h3>
+<p>Sending a conditional payment is essentially creating a new co-signed <a class="reference external" href="./pay_contracts.html#simplex-channel-state">simplex channel state</a> to add a new entry in the pending payId list (field 5) and update other related fields. Two off-chain messages (<code class="docutils literal notranslate"><span class="pre">CondPayRequest</span></code> and <code class="docutils literal notranslate"><span class="pre">CondPayResponse</span></code>) in one round trip are involved during the process.</p>
+<p><img alt="../_images/send-cond-pay.png" src="../_images/send-cond-pay.png" /></p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">CondPayRequest</span></code></strong> is the single-hop message sent by the peer who wants to send or forward the conditional payment. It mainly consists of the following information:</p>
+<ul class="simple">
+<li><strong>Payment data</strong>: the immutable <a class="reference external" href="./pay_contracts.html#conditional-payment">conditional payment</a> message set by the payment source.</li>
+<li><strong>New one-sig state</strong>: the new <a class="reference external" href="./pay_contracts.html#simplex-channel-state">simplex state</a> with the signature of <em>peer_from</em>. The new state should have a higher sequence number (field 3), new pending payId list (field 5) that includes the new conditional payment ID, and updated channel metadata (field 6 and 7).</li>
+<li><strong>Base seq</strong>: the sequence number of the previous simplex state on which this new state is based.</li>
+<li><strong>Pay note</strong>: a payment note with <em>google.protobuf.Any</em> type that can describe any information which might be useful for off-chain communication.</li>
+</ul>
+<p><strong><code class="docutils literal notranslate"><span class="pre">CondPayResponse</span></code></strong> is the replied message from the receiving peer after checking the validity of every data field in the request. The response consists of two fields:</p>
+<ul class="simple">
+<li><strong>Co-signed state</strong>: the latest co-signed <a class="reference external" href="./pay_contracts.html#simplex-channel-state">simplex state</a>. This state should be the same as the state in the <code class="docutils literal notranslate"><span class="pre">CondPayRequest</span></code> if the request is valid. Otherwise (e.g., invalid sequence number due to packet loss), the lastest co-signed state stored by the receiving peer is replied to the <em>peer_from</em> to help failure recovery (e.g., resending lost previous request).</li>
+<li><strong>Error</strong>: an optional error message with the error reason and the sequence number of the errored request. The <em>peer_from</em> sender is responsible for remembering and finding out the sent request based on the NACked sequence number.</li>
+</ul>
+</div>
+<div class="section" id="settle-conditional-payment">
+<h3>Settle Conditional Payment<a class="headerlink" href="#settle-conditional-payment" title="Permalink to this headline">¶</a></h3>
+<p>After a conditional payment is successfully setup, two peers can cooperatively settle the payment off-chain once the condition outcomes are finalized. Settling a conditional payment is essentially creating  a new co-signed <a class="reference external" href="./pay_contracts.html#simplex-channel-state">simplex channel state</a> to remove an entry from the pending payId list (field 5) and update the transferred amount (field 4) and other related fields. Three off-chain messages (<code class="docutils literal notranslate"><span class="pre">PaymentSettleRequest</span></code>, <code class="docutils literal notranslate"><span class="pre">PaymentSettleResponse</span></code>, and <code class="docutils literal notranslate"><span class="pre">PaymentSettleProof</span></code>) are involved during the process. The third message is only used when the receiving peer wants to initiate the settlement.</p>
+<p><img alt="../_images/settle-cond-pay.png" src="../_images/settle-cond-pay.png" /></p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">PaymentSettleRequest</span></code></strong> is the single-hop message sent by the <em>peer_from</em> side of the channel to clear a payment. It mainly consists of the following information:</p>
+<ul class="simple">
+<li><strong>Payments to be settled</strong>: a list of payment IDs to be settled, their settle reasons (e.g., fully paid, vouched, expired, rejected, on-chain resolved), and the settled amounts.</li>
+<li><strong>New one-sig state</strong>: the new <a class="reference external" href="./pay_contracts.html#simplex-channel-state">simplex state</a> with the signature of <em>peer_from</em>. The new state should have a higher sequence number (field 3), new pending payId list (field 5) that removes the IDs of settled payments, and updated transferred amount (field 4) and total pending amount (field 7).</li>
+<li><strong>Base seq</strong>: the sequence number of the previous simplex state on which this new state is based.</li>
+</ul>
+<p><strong><code class="docutils literal notranslate"><span class="pre">PaymentSettleResponse</span></code></strong> is the replied message from the receiving peer after checking the validity of the request. It has the same two fields with the <code class="docutils literal notranslate"><span class="pre">CondPayResponse</span></code> described above: a co-signed simplex state, and an optional error message.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">PaymentSettleProof</span></code></strong> is used by the receiving peer to initiate a settlement process. While the receiving peer is not allowed to create a one-sig state for the simplex channel, it can send this message to notify the <em>peer_from</em> side of the channel to start the channel state update. The message consists of two optional fields:</p>
+<ul class="simple">
+<li><strong>Vouched payment results</strong>: the list of <a class="reference external" href="./pay_contracts.html#resolve-payment-by-vouched-result">vouched results</a> co-signed by each payment’s source and destination. The <em>peer_from</em> should then send settle request based on the vouched amounts. This field is only used for multi-hop payments with numeric conditions, which will be detailed <a class="reference external" href="#pay-with-numeric-conditions">later</a>.</li>
+<li><strong>Payments to be settled</strong> (not through vouched results): a list of payment IDs to be settled, along with the settle proof reasons (e.g., expired, rejected, on-chain resolved). The <em>peer_from</em> should then evaluate the reasons and send settle requests accordingly.</li>
+</ul>
+</div>
+<div class="section" id="sliding-window-protocol">
+<h3>Sliding Window Protocol<a class="headerlink" href="#sliding-window-protocol" title="Permalink to this headline">¶</a></h3>
+<p>The above sections describe the basic single-hop message flow for two channel peers to update their simplex states cooperatively. Similar to all communication protocols, if the <em>peer_from</em> sender always waits for the response of the previous request before issuing the next request, then the total throughput would be significantly limited by the round-trip processing time. A natural step forward is to improve the off-chain performance with the <a class="reference external" href="https://en.wikipedia.org/wiki/Sliding_window_protocol">sliding window protocol</a>.</p>
+<p>One particular challenge of using sliding window is that the <em>message</em> for simplex state updates (including <code class="docutils literal notranslate"><span class="pre">CondPayRequest</span></code> and <code class="docutils literal notranslate"><span class="pre">PaymentSettleRequest</span></code>) is fundamentally different from the <em>packet</em> of common data transmission protocols such as TCP. Unlike TCP packets, simplex state update messages are strongly correlated: the simplex state in one message is always based on the state in the previous message. Therefore, one <em>invalid message will invalidate all the subsequent messages based on it</em>. CelerPay modifies the traditional sliding window protocol to address this challenge so that state update requests can be sent and processed at a much higher speed.</p>
+<p><img alt="../_images/sliding-window.png" src="../_images/sliding-window.png" /></p>
+<p>Figure above shows the sliding window workflow for CelerPay simplex state updates in case of different types of failures, including message loss and invalid request. <em><strong>S</strong></em> stands for the simplex state, <em><strong>b</strong></em> stands for the base sequence number(introduced in the previous section), <em><strong>R</strong></em> stands for the request purpose (e.g., send or settle a conditional payment). For example, <em>“S7,b4,R5”</em> indicates the message has a new one-sig simplex state with sequence number 7, which is updated based on the previous simplex state with sequence number 4, and the request purpose of this message is identified as <em>R5</em>. <em><strong>A</strong></em> stands for acknowledgment (ACK), <em><strong>N</strong></em> stands for negative acknowledgment (NACK). Note that the CelerPay sliding window protocol assumes the messages could be lost but always delivered in order guaranteed by the underlying data transmission layer such as <a class="reference external" href="https://grpc.io/">gRPC</a>.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="end-to-end-protocols">
+<h2>End-to-End Protocols<a class="headerlink" href="#end-to-end-protocols" title="Permalink to this headline">¶</a></h2>
+<p>The rest of this page describes the life cycles of end-to-end multi-hop conditional payments. As introduced before, CelerPay supports highly generic conditional dependency and condition resolution function. Two examples expected to be commonly used are <a class="reference external" href="./pay_contracts.html#transfer-function">boolean and numeric condition logics</a>, for which we have built optimized protocol and “pre-compiled” transfer functions. Different protocols with specialized condition resolution logics can be abstracted and optimized from the powerful single-hop conditional payment primitives.</p>
+<p>We use the “<a class="reference external" href="http://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf">End-to-End</a>” principle to guide our design and push as much complexity as possible to the edge of the network. This is the only way to build a simple, high performance, and robust relay node implementation that can support large scale payment flows.</p>
+<div class="section" id="pay-with-boolean-conditions">
+<h3>Pay with Boolean Conditions<a class="headerlink" href="#pay-with-boolean-conditions" title="Permalink to this headline">¶</a></h3>
+<p>We first present the flow of payments with boolean conditions, which we expect to be most commonly used. Since the condition outcomes are either true or false, the final results of these payments are always either the full amount or zero.</p>
+<p>The end-to-end off-chain payment protocol follows the Celer state channel design principles, specifically focuses on minimizing the <a class="reference external" href="./overview.html#minimize-relay-node-on-chain-interaction">relay node on-chain interaction</a>, <a class="reference external" href="./overview.html#minimize-on-chain-view-calls">on-chain view calls</a>, and <a class="reference external" href="./overview.html#minimize-off-chain-communication-overhead">off-chain communication overhead</a>. For payments with boolean conditions, <strong>the relay nodes never need to check the content of the conditions or perform any payment-related on-chain transactions, even in case of arbitrary malicious nodes along the payment routing path</strong>. This helps to build a highly robust and scalable core payment network to support a very large number of clients.</p>
+<div class="section" id="properties-of-payment-with-boolean-conditions">
+<h4>Properties of payment with boolean conditions<a class="headerlink" href="#properties-of-payment-with-boolean-conditions" title="Permalink to this headline">¶</a></h4>
+<p>Following the end-to-end principle, we build the boolean conditional payment protocol with the properties below:</p>
+<ul class="simple">
+<li><strong>Simple:</strong> Relay nodes never care about application or condition logics.</li>
+<li><strong>Secure:</strong> Relay nodes are resilient to arbitrary malicious application or condition logics.</li>
+<li><strong>Robust:</strong> Relay nodes never need to actively monitor on-chain condition or payment states.</li>
+<li><strong>Low on-chain cost:</strong>  Relay nodes never send on-chain dispute for any payment.</li>
+<li><strong>Low off-chain overhead:</strong> Relay nodes never modify any payment messages. The number of message exchanges is optimized for both cooperative and uncooperative cases.</li>
+</ul>
+</div>
+<div class="section" id="set-up-end-to-end-conditional-payment">
+<h4>Set up end-to-end conditional payment<a class="headerlink" href="#set-up-end-to-end-conditional-payment" title="Permalink to this headline">¶</a></h4>
+<p>The process of setting up an end-to-end multi-hop conditional payment is the same for payments with boolean and numeric conditions. Figure below shows the message flow of payment source <em>A</em> sending a conditional payment to destination <em>D</em> through two intermediate relay nodes <em>B</em> and <em>C</em>.</p>
+<p><img alt="../_images/e2e-pay-setup.png" src="../_images/e2e-pay-setup.png" /></p>
+<p>The conditional payment is set up in simplex channels <em>A-B</em>, <em>B-C</em>, <em>C-D</em> sequentially following the <a class="reference external" href="#send-conditional-payment"><em>send conditional payment</em></a> process described earlier. After the destination <em>D</em> receives the <code class="docutils literal notranslate"><span class="pre">CondPayRequest</span></code> from <em>C</em>, it will send a <code class="docutils literal notranslate"><span class="pre">CondPayReceipt</span></code> message directly back to the source <em>A</em> to acknowledge the end-to-end receipt of conditional payment. The end-to-end conditional payment setup process is considered completed at this stage if the payment does not have a hash lock condition.</p>
+<p>If a hash lock condition is included in the payment condition list to help set up the multi-hop conditional payment, then it is time for <em>A</em> to reveal the preimage of the hash lock to <em>D</em> through the <code class="docutils literal notranslate"><span class="pre">RevealSecret</span></code> message. The end-to-end conditional payment setup process is considered completed once <em>A</em> receives the <code class="docutils literal notranslate"><span class="pre">RevealSecretAck</span></code> from <em>D</em>.</p>
+</div>
+<div class="section" id="source-pays-in-full-amount-on-true-outcome">
+<h4>Source pays in full amount on true outcome<a class="headerlink" href="#source-pays-in-full-amount-on-true-outcome" title="Permalink to this headline">¶</a></h4>
+<p>After the conditional payment is successfully set up, nodes along the path can then cooperatively <a class="reference external" href="#settle-conditional-payment">settle the payment</a> hop-by-hop. Figure below shows the message flow when the payment source initiates this process by paying the full amount to its peer. This can happen immediately after <em>A</em> receives the <code class="docutils literal notranslate"><span class="pre">RevealSecretAck</span></code> for a conditional payment with only one hash lock condition, or after the CelerApp boolean conditions associated with the payment are finalized (off-chain) to be true.</p>
+<p><img alt="../_images/e2e-pay-full.png" src="../_images/e2e-pay-full.png" /></p>
+<p>As depicted in the figure above, when a conditional payment should be paid in full amount, the cooperative off-chain settlement should always start from the payment source (<em>A</em>) and proceed hop-by-hop downstream towards the destination (<em>D</em>). The relay node (<em>B</em> or <em>C</em>) only pay its downstream peer after it receives the full amount from the upstream peer, so it can safely forward the request without any check for the payment conditions or query of the on-chain information.</p>
+</div>
+<div class="section" id="destination-rejects-the-payment-on-false-outcome">
+<h4>Destination rejects the payment on false outcome<a class="headerlink" href="#destination-rejects-the-payment-on-false-outcome" title="Permalink to this headline">¶</a></h4>
+<p>Figure below shows the message flow in case of the payment destination rejecting the payment. This should happen after the CelerApp boolean conditions associated with the payment are finalized (off-chain) to be false.</p>
+<p><img alt="../_images/e2e-pay-reject.png" src="../_images/e2e-pay-reject.png" /></p>
+<p>When a conditional payment should not be paid, the cooperative off-chain settlement always starts from the payment destination (<em>D</em>) and proceeds hop-by-hop upstream towards the source (<em>A</em>). The relay node (<em>B</em> or <em>C</em>) only rejects the payment from the upstream peer after it confirms that the payment has been canceled with its downstream peer, so that it can safely clear the payment without any check for the payment conditions or query of the on-chain information.</p>
+<p>The payment rejection flow can also be triggered by a relay node (<em>B</em> or <em>C</em>) if it has accepted the conditional payment from the upstream peer, but cannot successfully forward the conditional payment to the downstream peer.</p>
+</div>
+<div class="section" id="dispute-the-payment-on-chain">
+<h4>Dispute the payment on-chain<a class="headerlink" href="#dispute-the-payment-on-chain" title="Permalink to this headline">¶</a></h4>
+<p>Above we have described the basic end-to-end message flows to send and settle a conditional payment <em>cooperatively</em>. If any node along the routing path does not follow the protocol properly, an on-chain dispute of the payment may be triggered. For payments with boolean conditions, <strong>the relay nodes do not need to initiate the dispute process of any single payment, because they are never exposed to security risks while forwarding the requests.</strong></p>
+<p>Only the payment source or destination are motivated to dispute the payment in case of uncooperative behaviors. Figure below shows the example message flow of the destination (<em>D</em>) starts to dispute the payment on-chain. This may happen when <em>D</em> does not receive the full amount of the payment as expected, which may be caused by failures from any upstream nodes (<em>A</em>, <em>B</em>, or <em>C</em>).</p>
+<p><img alt="../_images/e2e-boolean-dispute.png" src="../_images/e2e-boolean-dispute.png" /></p>
+<p>If not receive the settlement as expected, the payment destination <em>D</em> can choose to submit an on-chain transaction to <a class="reference external" href="./pay_contracts.html#resolve-payment-by-conditions">resolve the payment by conditions</a>. After the payment result is finalized on the PayRegistry, <em>D</em> should send the <code class="docutils literal notranslate"><span class="pre">PaymentSettleProof</span></code> message to the upstream peer <em>C</em> to ask for the settlement. On receiving the settle proof message with a reason code indicating the payment has been on-chain resolved, <em>C</em> should query the payment result from the PayRegistry to verify <em>D</em>’s claim, and then send the settle request to <em>D</em> to pay the on-chain resolved amount. Then the settle proof message should be sent upstream and the same process should be repeated hop-by-hop till the payment source <em>A</em>. If an upstream node (<em>A</em>, <em>B</em>, or <em>C</em>) does not cooperate even after the payment is resolved on-chain, which indicates the node could be malicious, then the downstream peer can choose to <a class="reference external" href="./pay_contracts.html#settle-close-channel">close the payment channel</a>. During the whole end-to-end process, the relay nodes never need to perform any payment-based on-chain transactions.</p>
+<p>If the payment conditions become false, but the payment source <em>A</em> has not received the settle proof to cancel the payment as expected, <em>A</em> does not necessarily need to dispute the payment on-chain at its own cost, because the payment will be cleared off-chain after the resolve deadline, which will be discussed <a class="reference external" href="#clear-expired-pays">next</a>. If the payment source <em>A</em> wants to cancel the payment before the resolve deadline, it can choose to resolve the payment on-chain and then settle the payment off-chain with its downstream peer. We omit the message flow diagram for this uncommon case.</p>
+</div>
+<div class="section" id="clear-expired-pays">
+<h4>Clear expired pays<a class="headerlink" href="#clear-expired-pays" title="Permalink to this headline">¶</a></h4>
+<p>Each conditional payment has a resolve deadline (field 6 of the <a class="reference external" href="./pay_contracts.html#conditional-payment">ConditionalPay</a> message), after which the payment will be expired if has not been settled off-chain or resolved on-chain. A node can safely clear the expired payments with its upstream and downstream peers because the payment can never be resolved on-chain as restricted by the PayResolver contract. When a node receives the settle request to clear an expired payment, in addition to verifying that payment resolve deadline is already passed, it should check the PayRegistry to make sure that the payment is not already finalized on-chain. Each CelerNode should periodically scan all its pending payments and clear the expired ones with its peers.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="pay-with-numeric-conditions">
+<h3>Pay with Numeric Conditions<a class="headerlink" href="#pay-with-numeric-conditions" title="Permalink to this headline">¶</a></h3>
+<p>In addition to commonly used boolean conditions, CelerPay also supports <a class="reference external" href="./pay_contracts.html#transfer-function">numeric conditions and resolving logics</a> as a pre-built transfer function and messaging protocol, which allow the payment result to be finalized at any amount from zero to the maximum amount (field 2 of the <a class="reference external" href="./pay_contracts.html#transfer-function">TransferFunction</a> message) according to the arbitrary CelerApp logic. This would greatly increase the flexibility of Celer off-chain platform usage.</p>
+<p>The end-to-end message flow of setting up the conditional payment with numeric conditions is the same with <a class="reference external" href="#set-up-end-to-end-conditional-payment">the flow for payment with boolean conditions</a>. If the payment result is the maximum full amount or zero, or if the payment is expired, then the settlement flow is also the same as described above. The major message flow differences come from the case when the payment result is a value between zero and the maximum amount, which are explained next.</p>
+<div class="section" id="properties-of-payment-with-numeric-conditions">
+<h4>Properties of payment with numeric conditions<a class="headerlink" href="#properties-of-payment-with-numeric-conditions" title="Permalink to this headline">¶</a></h4>
+<p>Following the end-to-end principle, we build the numeric conditional payment protocol with the properties below:</p>
+<ul class="simple">
+<li><strong>Simple:</strong> Relay nodes never care about application or condition logics.</li>
+<li><strong>Secure:</strong> Relay nodes are resilient to arbitrary malicious application or condition logics.</li>
+<li><strong>Robust:</strong> Relay nodes only need to call a single PayRegistry view function during settlement.</li>
+<li><strong>Low on-chain cost:</strong> A payment only needs to be disputed once along the whole routing path.</li>
+<li><strong>Low off-chain overhead:</strong> Relay nodes never modify any payment messages. The number of message exchanges is optimized for both cooperative and uncooperative cases.</li>
+</ul>
+</div>
+<div class="section" id="set-up-end-to-end-numeric-conditional-payment">
+<h4>Set up end-to-end numeric conditional payment<a class="headerlink" href="#set-up-end-to-end-numeric-conditional-payment" title="Permalink to this headline">¶</a></h4>
+<p>The process of setting up an end-to-end multi-hop conditional payment is the same for payments with boolean and numeric conditions, as <a class="reference external" href="#set-up-end-to-end-conditional-payment">described above</a>.</p>
+</div>
+<div class="section" id="settle-the-payment-hop-by-hop-upstream">
+<h4>Settle the payment hop-by-hop upstream<a class="headerlink" href="#settle-the-payment-hop-by-hop-upstream" title="Permalink to this headline">¶</a></h4>
+<p>Figure below shows the message flow of settling payment with numeric conditions when every node is cooperative. The process is started by the payment destination (<em>D</em>) when the payment should be paid in an amount larger than zero but smaller than the maximum.</p>
+<p><img alt="../_images/e2e-vouch.png" src="../_images/e2e-vouch.png" /></p>
+<p>The payment destination <em>D</em> should first send an end-to-end <code class="docutils literal notranslate"><span class="pre">PayResultVouchRequest</span></code> to the payment source <em>A</em> in order to create a co-signed <a class="reference external" href="./pay_contracts.html#resolve-payment-by-vouched-result">VouchedCondPayResult</a> message. Then <em>D</em> can send <code class="docutils literal notranslate"><span class="pre">PaymentSettleProof</span></code> to the upstream peer <em>C</em> using the co-signed vouched result as the proof to show that both the payment source and destination have agreed on the result of the payment. <em>C</em> should first query the on-chain PayRegistry to make sure that payment has not been finalized at a smaller amount, then pay <em>D</em> the vouched amount off-chain. After receiving the response from <em>D</em>, <em>C</em> can use the same co-signed vouched result to ask for settlement with its upstream peer <em>B</em>, which would follow the same procedure. The source <em>A</em> does not need to query the on-chain registry before pay <em>B</em> the vouched amount because the vouched result is signed by itself.</p>
+<p>The reason for the relay nodes to query the PayRegistry before sending the settle request is that if the payment is already finalized at a smaller amount (e.g., due to collusion of payment source and destination), then the relay node may have to pay the downstream peer more than it can receive from the upstream peer if it does not check in advance.</p>
+</div>
+<div class="section" id="dispute-the-payment-with-vouched-result">
+<h4>Dispute the payment with vouched result<a class="headerlink" href="#dispute-the-payment-with-vouched-result" title="Permalink to this headline">¶</a></h4>
+<p>After a relay node paid its downstream the vouched amount, it needs to make sure the same amount of tokens can be received from upstream. Otherwise, it has to dispute the payment on-chain with the co-signed vouched result message it has. Figure below shows an example of the relay node <em>C</em> to dispute the payment on-chain after it has paid <em>D</em> the vouched amount. This could happen when <em>C</em> is not able to receive the settlement from <em>B</em> in time, or it finds out malicious on-chain resolving (to a smaller amount) has been triggered by others.</p>
+<p><img alt="../_images/e2e-vouch-dispute.png" src="../_images/e2e-vouch-dispute.png" /></p>
+<p>The relay node <em>C</em> can submit an on-chain transaction to <a class="reference external" href="./pay_contracts.html#resolve-payment-by-vouched-result">resolve the payment by vouched result</a>. The PayResolver contract <a class="reference external" href="./pay_contracts.html#dispute-the-payment-result">guarantees</a> that the finalized amount in the PayRegistry would not be smaller than the co-signed vouched result <em>C</em> submitted, which ensures that the relay node can receive at least the same vouch amount it has sent. After the payment result is finalized on the PayRegistry, <em>C</em> can send <code class="docutils literal notranslate"><span class="pre">PaymentSettleProof</span></code> message to the upstream peer, and the rest of the flow is similar to the <a class="reference external" href="#dispute-the-payment-on-chain">case</a> for payment with boolean conditions.</p>
+<p>Through simple analysis, we can conclude that the protocol for payment with numeric conditions is secure and stable because <strong>each relay node is guaranteed that the amount of tokens it receives from upstream would be equal to or greater than the amount it has sent to downstream</strong>.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="app.html" class="btn btn-neutral float-right" title="CelerApp Contracts and Protocol" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pay_contracts.html" class="btn btn-neutral float-left" title="CelerPay On-Chain Contracts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Celer Network
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

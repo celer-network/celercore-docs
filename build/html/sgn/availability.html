@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Off-Chain Availability Problem &mdash; CelerCore  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SGN Architecture" href="architecture.html" />
+    <link rel="prev" title="CelerApp Contracts and Protocol" href="../channel/app.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> CelerCore
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html">Layer-2 Blockchain Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html#what-is-celer">What is Celer?</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Channel Network</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../channel/overview.html">Celer Channel Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../channel/pay_contracts.html">CelerPay On-Chain Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../channel/pay_protocol.html">CelerPay Off-Chain Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../channel/app.html">CelerApp Contracts and Protocol</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Guardian Network</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Off-Chain Availability Problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#security-risks">Security Risks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-if-i-lost-my-off-chain-state">What if I lost my off-chain state?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-if-my-peer-maliciously-disputes-while-i-am-offline">What if my peer maliciously disputes while I am offline?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#usability-hassles">Usability Hassles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-send-payments-to-someone-who-is-offline">How do I send payments to someone who is offline?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-can-i-get-rid-of-the-need-for-on-chain-game-moves">How can I get rid of the need for on-chain game moves?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#decentralized-solution">Decentralized Solution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">SGN Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guardian.html">SGN as Channel Guardian</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Liquidity Backing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/problem.html">State Channel Liquidity Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/backing.html">Celer Liquidity Backing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CelerCore</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Off-Chain Availability Problem</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/sgn/availability.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="off-chain-availability-problem">
+<h1>Off-Chain Availability Problem<a class="headerlink" href="#off-chain-availability-problem" title="Permalink to this headline">¶</a></h1>
+<p>Everything comes at a price. While state channel improves scalability, it imposes an impractical “always online” responsibility on the users, as the off-chain states need to be available against malicious on-chain disputes. Additionally, state channel also introduces various usability hassles because the channel off-chain states can only make progress when all participants are available online to sign new states. These security and usability issues can be categorized as the off-chain availability problem, which is the major challenge of state channel applications.</p>
+<hr class="docutils" />
+<div class="section" id="security-risks">
+<h2>Security Risks<a class="headerlink" href="#security-risks" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="what-if-i-lost-my-off-chain-state">
+<h3>What if I lost my off-chain state?<a class="headerlink" href="#what-if-i-lost-my-off-chain-state" title="Permalink to this headline">¶</a></h3>
+<p>Unlike the blockchain where every node stores all the data, a state channel requires the users to be responsible for keeping their own off-chain state proof safe and available. This means if a client did not backup its off-chain state elsewhere and lost its local storage, then its fund security is at the channel peer’s mercy.</p>
+</div>
+<div class="section" id="what-if-my-peer-maliciously-disputes-while-i-am-offline">
+<h3>What if my peer maliciously disputes while I am offline?<a class="headerlink" href="#what-if-my-peer-maliciously-disputes-while-i-am-offline" title="Permalink to this headline">¶</a></h3>
+<p>If one party tries to settle the payment channel on a state that is old but more favorable for itself, the counterparty must be able to respond by submitting the latest state within the pre-agreed <em>dispute time window</em> in order to guarantee its fund safety. A longer dispute window may mitigate the problem by allowing a user to stay offline safely for a longer period of time, but cannot eliminate this fundamental and unacceptable burden for ordinary (mobile) users.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="usability-hassles">
+<h2>Usability Hassles<a class="headerlink" href="#usability-hassles" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="how-do-i-send-payments-to-someone-who-is-offline">
+<h3>How do I send payments to someone who is offline?<a class="headerlink" href="#how-do-i-send-payments-to-someone-who-is-offline" title="Permalink to this headline">¶</a></h3>
+<p>Sending a payment through the blockchain is easy, which is just sending a request to alter the blockchain state. However, completing a payment through a state channel network has a much higher requirement: the receiver must be available online to sign the off-chain state. This is a huge usability burden for people who have used to how traditional mobile payments work nowadays.</p>
+</div>
+<div class="section" id="how-can-i-get-rid-of-the-need-for-on-chain-game-moves">
+<h3>How can I get rid of the need for on-chain game moves?<a class="headerlink" href="#how-can-i-get-rid-of-the-need-for-on-chain-game-moves" title="Permalink to this headline">¶</a></h3>
+<p>Playing an interactive state channel chess game is fast and fun until someone becomes unresponsive and the counterparty has to bring the game to the  blockchain, after which players have to make the moves on-chain, which is often unbearably slow and expensive for most players. On-chain play has to be supported because the state channel protocols cannot tell who is really the “bad guy” responsible for the dispute.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="decentralized-solution">
+<h2>Decentralized Solution<a class="headerlink" href="#decentralized-solution" title="Permalink to this headline">¶</a></h2>
+<p>A straightforward solution to solve all the problems above is to have the users connected to services that are always online to continuously</p>
+<ul class="simple">
+<li>Backup users latest off-chain states.</li>
+<li>Watch on-chain dispute events and respond on behalf of offline users.</li>
+<li>Receive payments on behalf of offline users.</li>
+<li>Monitor and provide authentic proofs on app user off-chain actions.</li>
+</ul>
+<p>These functionalities are not that complicated to be implemented as parts of a centralized service. However, this will break the promise of blockchain applications, since it implies a single point of trust or failure. Celer’s approach is to develop and promote a highly scalable, available, and secure decentralized platform to provide these services. Our solution is an efficient <em>specialized sidechain</em> called <strong>State Guardian Network</strong> (SGN), which we detail in the following sections.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="architecture.html" class="btn btn-neutral float-right" title="SGN Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../channel/app.html" class="btn btn-neutral float-left" title="CelerApp Contracts and Protocol" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Celer Network
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

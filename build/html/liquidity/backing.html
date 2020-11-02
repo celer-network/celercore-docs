@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Celer Liquidity Backing &mdash; CelerCore  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="State Channel Liquidity Problem" href="problem.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> CelerCore
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html">Layer-2 Blockchain Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html#what-is-celer">What is Celer?</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Channel Network</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../channel/overview.html">Celer Channel Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../channel/pay_contracts.html">CelerPay On-Chain Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../channel/pay_protocol.html">CelerPay Off-Chain Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../channel/app.html">CelerApp Contracts and Protocol</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Guardian Network</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/availability.html">Off-Chain Availability Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/architecture.html">SGN Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/guardian.html">SGN as Channel Guardian</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Liquidity Backing</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="problem.html">State Channel Liquidity Problem</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Celer Liquidity Backing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#proof-of-liquidity-commitment">Proof of Liquidity Commitment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#liquidity-backing-auction">Liquidity Backing Auction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#launch-auction">Launch Auction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#place-bid">Place Bid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reveal-bid">Reveal Bid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#claim-winners">Claim Winners</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#challenge-winners">Challenge Winners</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#finalize-auction">Finalize Auction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#withdraw-bid">Withdraw Bid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#repay-debt-and-interest">Repay Debt and Interest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#collect-collateral">Collect Collateral</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CelerCore</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Celer Liquidity Backing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/liquidity/backing.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="celer-liquidity-backing">
+<h1>Celer Liquidity Backing<a class="headerlink" href="#celer-liquidity-backing" title="Permalink to this headline">¶</a></h1>
+<p>Celer Liquidity Backing is part of the Celer cryptoeconomics, a.k.a. cEcnonomy. Its goal is to meet the <a class="reference internal" href="problem.html"><span class="doc">state channel network liquidity challenge</span></a> by creating a easy-to-access liquidity crowdlending market for off-chain service providers (OSP) to borrow funds to support their operations. Two core mechanisms of Liquidity Backing are Proof of Liquidity Commitment (PoLC) and Liquidity Backing Auction (LiBA), which are implemented in two separate smart contracts connected with external function calls. The two types of activity participants are OSPs who act as borrowers, and the Network Liquidity Backers (NLB) who act as lenders.</p>
+<p><img alt="../_images/liquidity-backing.png" src="../_images/liquidity-backing.png" /></p>
+<p>Figure above shows the architecture overview of liquidity backing. Blue vertical scrolls represent smart contracts; dashed rounded rectangles are participants of liquidity backing activities; black arrows are contract function calls from participants; orange arrow represents external function calls between smart contracts. Below we summarize the roles of the four major systems components.</p>
+<ul class="simple">
+<li><strong>Proof of Liquidity Commitment (PoLC)</strong> is a process to incentivize and bootstrap crypto holders to lock in their idle liquidity (tokens) in the PoLC contract by rewarding them with CELR tokens and therefore establishing an initial stable liquidity pool.</li>
+<li><strong>Liquidity Backing Auction (LiBA)</strong> enables off-chain service providers to solicit liquidity through crowdlending. In essence, an off-chain service provider starts an on-chain LiBA process to borrow a certain amount of liquidity for a certain amount of time and pay the interest.</li>
+<li><strong>Off-chain Service Provider (OSP)</strong> runs <a class="reference external" href="../channel/overview.html#system-architecture">CelerNodes</a> to provide payment relay services. It usually needs a large amount of liquidity to expand and maintain its business to serve many clients, and thus may need to initiate auction to <strong>borrow</strong> tokens through LiBA.</li>
+<li><strong>Network Liquidity Backer (NLB)</strong> is a token holder who locks its fund into the PoLC contract to get commitment reward, and may <strong>lend</strong> the tokens to OSPs through LiBA to earn interest.</li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="proof-of-liquidity-commitment">
+<h2>Proof of Liquidity Commitment<a class="headerlink" href="#proof-of-liquidity-commitment" title="Permalink to this headline">¶</a></h2>
+<p>As described above, our goal is to lower the liquidity barrier for technically capable parties to become OSPs, and thus create an efficient and competitive market for good and reliable off-chain services. The first step to realize this goal is to provision an abundant and stable liquidity pool. To this end, we propose the Proof of Liquidity Commitment (PoLC) virtual mining process.</p>
+<p>From a high level, the PoLC mining process is to incentivize people (NLBs) to lock in their idle liquidity (which can be in the form of digital assets, including but not limited to cryptocurrencies) in the PoLC contract for a certain period of time by rewarding them with CELR tokens. During this period of time when the digital assets are locked, the NLB’s assets cannot be used for anything else other than the liquidity backing process.</p>
+<p>The PoLC mining power associated with a commitment is proportional to the asset value and lock duration, i.e., mining power will be the product of asset value and lock duration. Each block has a fixed amount of total reward. <em>The reward for a commitment by a given block will be proportional to the percentage of its mining power to the total mining power by the given block</em>. Formally, the PoLC reward calculation can be defined as the following.</p>
+<p><strong>PoLC Reward.</strong> For a given commitment <em><strong>i</strong></em>, denote its asset value as  <em><strong>V<sub>i</sub></strong></em> and the lock duration as  <em><strong>T<sub>i</sub></strong></em>, then its mining power <em><strong>M<sub>i</sub></strong></em> is computed as  <em><strong>M<sub>i</sub></strong></em> = <em><strong>V<sub>i</sub></strong></em> × <em><strong>T<sub>i</sub></strong></em> . Let <em><strong>R</strong></em> denote the total reward for a given block, then the reward <em><strong>R<sub>i</sub></strong></em> for commitment <em><strong>i</strong></em> at the block is computed as <em><strong>R<sub>i</sub></strong></em> = <em><strong>R</strong></em> × <em><strong>M<sub>i</sub></strong></em> / ∑<sub><em>j</em></sub><em><strong>M<sub>j</sub></strong></em> , where the denominator is the sum of the mining power of all commitments locked in the given block.</p>
+<p>Note that locked liquidity in PoLC does not carry any inherent counterparty risk as it simply shows a commitment to the Celer Network liquidity backing. Early unlocking of the committed fund is not allowed. <em>The only option to further make use of the locked tokens is to participate in the liquidity backing auction (LiBA) to earn more interest from the committed fund</em>.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="liquidity-backing-auction">
+<h2>Liquidity Backing Auction<a class="headerlink" href="#liquidity-backing-auction" title="Permalink to this headline">¶</a></h2>
+<p>The second part for solving the liquidity puzzle is to enable a way for off-chain service providers to access to liquidity pool globally, which is achieved via the Liquidity Backing Auction (LiBA) process. An OSP initiates a LiBA process by announcing that it wants to borrow a certain amount of liquidity for a certain period of time, and specifying related auction and borrowing parameters. An interested liquidity backer (NLB) can submit a bid that contains the interest rate and the amount of liquidity to be offered, and the amount of CELR to be paid to the reward pool. Then OSP will confirm to borrow the liquidity from the winning bidders and pay the  auction fee in CELR to the reward pool. The borrowed liquidity will be used as a fraud-proof bond or outgoing state channel deposit.</p>
+<p><img alt="../_images/liba.png" src="../_images/liba.png" /></p>
+<p>Figure above shows the basic sequential operating phases for a liquidity backing auction. Grey rounded rectangles represent OSP operations, while the green ones represent NLB operations. LiBA is a generalized multi-attribute Vickrey-Clarke-Groves (sealed-bid second-score) auction, which we describe in detail in the rest of this page.</p>
+<div class="section" id="launch-auction">
+<h3>Launch Auction<a class="headerlink" href="#launch-auction" title="Permalink to this headline">¶</a></h3>
+<p>A qualified OSP can initiate an auction by specifying the asked token type and amount, the promised duration, the maximum acceptable interest rate, and other related parameters. As an implementation detail, LiBA contract computes interest on a daily non-compounding basis.</p>
+<p>Optionally, the OSP borrower can collateralize the auction by providing a certain amount of tokens as collateral, so that the lenders will be compensated when the borrower cannot make the repayment. LiBA is designed to be <em>not</em> requiring over-collateralization, which is different from many existing lending DeFi products. The reason is that we expect most OSPs in a state channel network to be locally known identities (e.g., enterprises, foundations, exchanges, dApp hosts, wallet providers, research institutes), instead of the homogeneous “common” peers in many other DeFi settings. The main goal of LiBA is not for any anonymous individual to over-collateralize one liquidity in exchange for another (which LiBA also supports), but for known and reputable entities who want to operate OSPs be able to obtain liquidity from the potentially anonymous crowd. In the future release of LiBA, the borrowed liquidity will be restricted to only use as state channel deposits by the smart contracts, which will further lower the risk of fraud or fund misuse.</p>
+</div>
+<div class="section" id="place-bid">
+<h3>Place Bid<a class="headerlink" href="#place-bid" title="Permalink to this headline">¶</a></h3>
+<p>After an auction is launched, anyone (NLB) who has the same type of tokens in the PoLC contract can participate and place a blind bid by submitting a secret hash of the bid information to the LiBA contract. The bid information includes the token amount and interest rate offered by the bidder, and the amount of CELR token would be paid by the bidder if the bid succeeds.</p>
+<p>CELR token serves two purposes for the bidder. First, there is a minimum CELR amount required by the contract. If the bidder placed a blind bid but did not reveal the bid information in the <a class="reference external" href="#reveal-bid">later phase</a>, then the staked CELR will be forfeited. Second, the amount of CELR to be paid for a winning bid is taken into account when ranking the bids. For bids with the same rate, the ones with more CELR have higher ranks. This will be further discussed <a class="reference external" href="#claim-winners">later</a>.</p>
+</div>
+<div class="section" id="reveal-bid">
+<h3>Reveal Bid<a class="headerlink" href="#reveal-bid" title="Permalink to this headline">¶</a></h3>
+<p>After the blind bidding phase finishes, all bidders should reveal their bids within a certain amount of time. Each blind bid was submitted as a hash of the bid information and a salt selected by the bidder. The bidder just needs to submit the full bid information and salt for the LiBA contract to verify and record the revealed bid. As described above, a bidder who does not reveal the bid information will be penalized.</p>
+</div>
+<div class="section" id="claim-winners">
+<h3>Claim Winners<a class="headerlink" href="#claim-winners" title="Permalink to this headline">¶</a></h3>
+<p>Following the reveal bid phase, it is time to figure out who are the bid winners, what interest rate will they get, and how much CELR should they pay. LiBA is a multi-dimensional second-price auction. All bids will be ranked by their offered interest rate from low to high. Bids with the same interest rate will be ranked by the amount of associated CELR tokens from high to low. Then the bidders will be put into the winner list in the order of their ranks, until the total amount of lending tokens has reached the asked amount by the borrower. As a second price auction, all winners will receive the same interest rate, which is the rate offered by the top loser, who has the highest rank excluding the winners. Winners who bid with a rate lower than the top loser’s do not need to pay CELR, while winners who bid the same rate with the top loser’s need to pay the CELR amount specified in the top loser’s bid.</p>
+<p>Technically, all these sorting and computations could be done on-chain as smart contract executions. However, it would be very expensive and slow, and may also be bottlenecked on the per-block gas limit. Instead, we choose a classic claim and challenge layer-2 approch. Borrower OSP would off-chain compute the auction bids locally and then on-chain claim the final results including the winner list and top loser. Note that the borrower OSP needs to keep its reputation, and does not have strong incentives to make a false claim.</p>
+</div>
+<div class="section" id="challenge-winners">
+<h3>Challenge Winners<a class="headerlink" href="#challenge-winners" title="Permalink to this headline">¶</a></h3>
+<p>If the borrower OSP made a false claim, anyone who has been observing the auction process can challenge the claimed result. While the on-chain top-K sorting that we avoided could be expensive, challenging a claimed sorted list and proofing where goes wrong is a much cheaper process.</p>
+</div>
+<div class="section" id="finalize-auction">
+<h3>Finalize Auction<a class="headerlink" href="#finalize-auction" title="Permalink to this headline">¶</a></h3>
+<p>After the challenge phase, borrower OSP can finalize the auction by paying the borrowing fee in CELR and receive the borrowed tokens from the winning bids, which will be transferred from the winning bidders’ token pools in the PoLC contract.</p>
+<p><strong>Borrowing Fee.</strong> Same with other LiBA related fees, the borrowing fee will be paid to the PoLC reward pool. Let <em><strong>V</strong></em> denotes the total borrowed token value, <em><strong>T</strong></em> denotes the promised borrowed duration in blocks, <em><strong>M</strong></em> denotes the current total mining power of all blocks during the promised borrowed duration, <em><strong>R</strong></em> denotes the PoLC reward per block, then the borrowing fee paid by the OSP is <em><strong>F</strong></em> = <em><strong>(R × T) x ((V × T) x T) / M</strong></em> = <em><strong>R × V × T<sup>3</sup> / M</strong></em>. Here <em><strong>R × T</strong></em> is the total PoLC reward across the whole borrowing duration,  <em><strong>V × T</strong></em> is the mining power of the borrowed tokens at each block.</p>
+</div>
+<div class="section" id="withdraw-bid">
+<h3>Withdraw Bid<a class="headerlink" href="#withdraw-bid" title="Permalink to this headline">¶</a></h3>
+<p>If the auction was not finalized by the OSP in time, or if the bid didn’t win, the bidder should withdraw the bid to get back the CELR tokens paid during the placing bid phase.</p>
+</div>
+<div class="section" id="repay-debt-and-interest">
+<h3>Repay Debt and Interest<a class="headerlink" href="#repay-debt-and-interest" title="Permalink to this headline">¶</a></h3>
+<p>The OSP should repay the borrowed tokens and interest before the promised borrowing duration ends. If collateral was placed when the auction was launched. The repaid tokens will be transferred back to the lenders’ PoLC commitments.</p>
+</div>
+<div class="section" id="collect-collateral">
+<h3>Collect Collateral<a class="headerlink" href="#collect-collateral" title="Permalink to this headline">¶</a></h3>
+<p>If the OSP placed collateral when launched the auction, but failed the repay the debt and interest in time, then the lenders can collect the collateral as compensation in proportional to the amount of tokens they lent out.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="problem.html" class="btn btn-neutral float-left" title="State Channel Liquidity Problem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Celer Network
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

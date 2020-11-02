@@ -1,0 +1,461 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CelerApp Contracts and Protocol &mdash; CelerCore  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Off-Chain Availability Problem" href="../sgn/availability.html" />
+    <link rel="prev" title="CelerPay Off-Chain Protocol" href="pay_protocol.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> CelerCore
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html">Layer-2 Blockchain Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html#what-is-celer">What is Celer?</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Channel Network</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Celer Channel Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pay_contracts.html">CelerPay On-Chain Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pay_protocol.html">CelerPay Off-Chain Protocol</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CelerApp Contracts and Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generalized-app-workflow">Generalized App Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api-required-by-celerpay">API Required by CelerPay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#end-to-end-integrated-workflow">End-to-End Integrated Workflow</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#play-the-game-with-conditional-payments-to-the-winner">Play the game with conditional payments to the winner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#settle-the-payments-when-the-loser-is-cooperative">Settle the payments when the loser is cooperative</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#settle-the-payments-when-the-loser-is-uncooperative">Settle the payments when the loser is uncooperative</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#an-efficient-app-framework">An Efficient App Framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#protobuf-message">Protobuf Message</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#single-and-multi-session-apps">Single and Multi-Session Apps</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#single-session-app">Single-Session App</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multi-session-app">Multi-Session App</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#contract-operations">Contract Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contract-templates">Contract Templates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">State Guardian Network</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/availability.html">Off-Chain Availability Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/architecture.html">SGN Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/guardian.html">SGN as Channel Guardian</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Liquidity Backing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/problem.html">State Channel Liquidity Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/backing.html">Celer Liquidity Backing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CelerCore</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>CelerApp Contracts and Protocol</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/channel/app.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="celerapp-contracts-and-protocol">
+<h1>CelerApp Contracts and Protocol<a class="headerlink" href="#celerapp-contracts-and-protocol" title="Permalink to this headline">¶</a></h1>
+<p>As described in the previous sections, CelerPay supports high-throughput multi-hop generic conditional payments, where the conditional dependency is expressed as a very simple API query interface. Different applications, such as off-chain state channel contract, on-chain oracle, on-chain NFT ledger, ENS name ownership, rollup states, can all connect with this conditional dependency interface. In this chapter, we discuss the general interface and specifically the design pattern and interaction flow of generalized state channel applications.</p>
+<p>CelerApps are highly interactive, secure, and low-cost decentralized state channel applications that can produce outcomes to serve as CelerPay conditions. CelerApp is designed to be flexible to support arbitrary multi-party state transition logic. <strong>Initializing or closing a CelerApp state channel does not require any on-chain transactions if all participants are cooperative.</strong> The on-chain dispute process of CelerApps is also optimized for cost-efficiency.</p>
+<p>This chapter first describes how to integrate CelerApp with CelerPay to send and settle off-chain conditional payments based on the app state outcomes, then introduces the structure and operations of an efficient CelerApp framework powering the <a class="reference external" href="https://celerx.app">CelerX</a> application platform.</p>
+<div class="section" id="generalized-app-workflow">
+<h2>Generalized App Workflow<a class="headerlink" href="#generalized-app-workflow" title="Permalink to this headline">¶</a></h2>
+<p>The app state channels share some high-level principles with the payment state channels but also have a significant difference: app channel is decoupled from funding allocation, so that initializing an app channel does not need an upfront token deposit. Therefore, any number of nodes can create and join app channels <strong>without on-chain initialization</strong>, and can directly communicate with each other to update their co-signed off-chain states <strong>without any multi-hop relays</strong>.</p>
+<div class="section" id="api-required-by-celerpay">
+<h3>API Required by CelerPay<a class="headerlink" href="#api-required-by-celerpay" title="Permalink to this headline">¶</a></h3>
+<p>Any on-chain or off-chain smart contract can become a CelerApp contract by exposing two functions for the CelerPay to use as payment condition: <code class="docutils literal notranslate"><span class="pre">isFinalized</span></code> returns whether the app state outcome is finalized; <code class="docutils literal notranslate"><span class="pre">getOutcome</span></code> returns the boolean or numeric outcome of the app.</p>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="c1">// required interface for CelerApp with boolean outcome</span>
+<span class="kd">interface</span> <span class="n">IBooleanOutcome</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="n">isFinalized</span><span class="p">(</span><span class="kt">bytes</span> <span class="n">calldata</span> <span class="n">_query</span><span class="p">)</span> <span class="kr">external</span> <span class="kr">view</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bool</span><span class="p">);</span>
+    <span class="kd">function</span> <span class="n">getOutcome</span><span class="p">(</span><span class="kt">bytes</span> <span class="n">calldata</span> <span class="n">_query</span><span class="p">)</span> <span class="kr">external</span> <span class="kr">view</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bool</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// required interface for CelerApp with numeric outcome</span>
+<span class="kd">interface</span> <span class="n">INumericOutcome</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="n">isFinalized</span><span class="p">(</span><span class="kt">bytes</span> <span class="n">calldata</span> <span class="n">_query</span><span class="p">)</span> <span class="kr">external</span> <span class="kr">view</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bool</span><span class="p">);</span>
+    <span class="kd">function</span> <span class="n">getOutcome</span><span class="p">(</span><span class="kt">bytes</span> <span class="n">calldata</span> <span class="n">_query</span><span class="p">)</span> <span class="kr">external</span> <span class="kr">view</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">uint</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The Solidity interfaces for CelerApp contracts are shown above. Each function takes a single argument in generic <em>bytes</em> format so that arbitrary query logics can be supported. These two state query functions are the <em>only requirements</em> from CelerPay, which <em>cares nothing</em> about how the app states are progressed and resolved.</p>
+<p><strong>Note on application Byzantine failures:</strong>
+A common question on this decoupled architecture is about the security assumption of the applications on which conditional payments depend. How can the allocated fund be secure with such a minimal interface? What happens if the application logic exhibits Byzantine behaviors, e.g., <code class="docutils literal notranslate"><span class="pre">isFinalized</span></code> returns <code class="docutils literal notranslate"><span class="pre">true</span></code> and then later flips to <code class="docutils literal notranslate"><span class="pre">false</span></code>, or <code class="docutils literal notranslate"><span class="pre">getOutcome</span></code> returns nondeterministic results? As discussed through this documentation site, with careful design of the on-chain contracts and off-chain protocols, <strong>CelerPay network puts no assumption on the reliability and security of the CelerApps and thus is resilient to any Byzantine behavior of the applications.</strong></p>
+</div>
+<div class="section" id="end-to-end-integrated-workflow">
+<h3>End-to-End Integrated Workflow<a class="headerlink" href="#end-to-end-integrated-workflow" title="Permalink to this headline">¶</a></h3>
+<p>As described above, it is quite easy to integrate CelerApp with CelerPay so that an app outcome can be associated with any off-chain token transfer. This section uses an example to show the end-to-end integrated workflow. For simplicity, our example assumes two players playing a state-channel-based game with conditional payments to each other depending on who wins the game. More app participants and more complicated numeric payment resolving logic can be supported with a similar workflow, which we omit in this section.</p>
+<div class="section" id="play-the-game-with-conditional-payments-to-the-winner">
+<h4>Play the game with conditional payments to the winner<a class="headerlink" href="#play-the-game-with-conditional-payments-to-the-winner" title="Permalink to this headline">¶</a></h4>
+<p><img alt="../_images/app-send-pay.png" src="../_images/app-send-pay.png" /></p>
+<p>Figure above shows the message flow in the games setup and playing phase. <em>A</em> and <em>D</em> are the players of a state-channel-based game. Black lines represent messages related to the off-chain game; purple and orange lines represent the messages related to conditional payments from <em>A</em> and <em>D</em> respectively; dashed lines means the two players directly communicated with each other without the payment relay nodes. The steps are summarized as follows:</p>
+<ol class="simple">
+<li><em>A</em> and <em>D</em> set up up the game app state channel by exchanging some initial parameters, including the basic match information, the winner’s prize, the virtual or deployed game contract address. <strong>Neither virtual or deployed game contract requires on-chain initialization of the game channel.</strong></li>
+<li><em>A</em> and <em>D</em> send conditional payments to each other according to the <a class="reference external" href="./pay_protocol.html#set-up-end-to-end-conditional-payment">message flow of conditional payment setup</a>. The payment content is symmetric: “pay the game opponent the winner’s price if the opponent wins.” The routing paths of the two payments can be different. The game can start after both conditional payments are received.</li>
+<li><em>A</em> and <em>D</em> play the game off-chain by exchanging signed game states until reaching an outcome (either cooperatively or through on-chain settlement).</li>
+</ol>
+<p><strong>Note on state progression:</strong> The integrated workflow is agnostic to how the states are updated or on-chain settled. We will introduce an <a class="reference external" href="#an-efficient-app-framework">efficient framework</a> for game state progression and on-chain settle later. Other types of app channel and state progression protcols can also be fully supported by the integrated workflow.</p>
+</div>
+<div class="section" id="settle-the-payments-when-the-loser-is-cooperative">
+<h4>Settle the payments when the loser is cooperative<a class="headerlink" href="#settle-the-payments-when-the-loser-is-cooperative" title="Permalink to this headline">¶</a></h4>
+<p><img alt="../_images/app-settle-pay.png" src="../_images/app-settle-pay.png" /></p>
+<p>Figure above shows the message flow of <em>A</em> following the protocol after it lost the game off-chain. The honest and cooperative loser <em>A</em> should initiate the settlement process of both conditional payments: <a class="reference external" href="./pay_protocol.html#source-pays-in-full-amount-on-true-outcome">pay the full amount</a> of the conditional payment from <em>A</em> and <a class="reference external" href="./pay_protocol.html#destination-rejects-the-payment-on-false-outcome">reject</a> the conditional payment from <em>D</em>. The whole integrated workflow is completed after the winner <em>D</em> confirms the settlement of both conditional payments.</p>
+<p>There is zero on-chain transaction during the whole integrated workflow if all participants are cooperative, starting from two players decides to play the game until the winner receives the prize.</p>
+</div>
+<div class="section" id="settle-the-payments-when-the-loser-is-uncooperative">
+<h4>Settle the payments when the loser is uncooperative<a class="headerlink" href="#settle-the-payments-when-the-loser-is-uncooperative" title="Permalink to this headline">¶</a></h4>
+<p><img alt="../_images/app-dispute-pay.png" src="../_images/app-dispute-pay.png" /></p>
+<p>Figure above shows the message flow after <em>A</em> lost the game but did not follow the protocol to settle the conditional payments. In order to receive the prize, the winner <em>D</em> should initiate a dispute process, resolve the payment on-chain, and settle the payment with its upstream peer. There is zero on-chain transaction from the relay nodes <em>B</em> and <em>C</em> even when the players <em>A</em> and <em>D</em> cannot cooperatively finish the game off-chain. The step-by-step workflow is summarized as follows:</p>
+<ol class="simple">
+<li>The winner <em>D</em> starts to on-chain  dispute the game by submitting the off-chain game state to the on-chain game contract. If the off-chain game is based on a virtual contract, <em>D</em> should first deploy the virtual contract through the <a class="reference external" href="./pay_contracts.html#virtcontractresolver">VirtContractResolver</a>. Further on-chain game move may be needed if the co-signed off-chain game state cannot result in a finalized outcome.</li>
+<li><em>D</em> <a class="reference external" href="./pay_contracts.html#resolve-payment-by-conditions">on-chain resolves the conditional payment</a> from <em>A</em> on-chain after the game outcome is finalized. The <a class="reference external" href="./pay_contracts.html#payresolver">PayResolver</a> would query the game (condition) outcome from the app contract, then compute and write the payment result into the <a class="reference external" href="./pay_contracts.html#payregistry">PayRegistry</a>.</li>
+<li><em>D</em> and all relay nodes <a class="reference external" href="./pay_protocol.html#dispute-the-payment-on-chain">settle the on-chain resolved payment</a> from <em>A</em> with their upstream peers. If any node along the path refuses to cooperative, the downstream peer may choose the settle and close the payment channel with the upstream peer.</li>
+<li>The conditional payment from winner <em>D</em> to loser <em>A</em> should be canceled. If <em>A</em> did not <a class="reference external" href="./pay_protocol.html#destination-rejects-the-payment-on-false-outcome">reject</a> the payment sent to itself, all nodes could wait till the payment expires and then <a class="reference external" href="./pay_protocol.html#clear-expired-pays">clear</a> it. <em>D</em> can also on-chain resolve the payment sent by itself if it wants to clear the payment before it expires.</li>
+</ol>
+<p>From the generalized state channel app workflow described in this section, we can conclude two important architectural benefits thanks to the <strong>decoupling of payment and app channels</strong>:</p>
+<ul class="simple">
+<li>The players <em>A</em> and <em>D</em> can use any types of app channel framework for their off-chain games while efficiently associating conditional payments with the game result</li>
+<li>The payment relay nodes <em>B</em> and <em>C</em> just simply forward the payment messages off-chain without the need to know anything about the game between players, so that the network complexity is minimized as it scales out.</li>
+</ul>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="an-efficient-app-framework">
+<h2>An Efficient App Framework<a class="headerlink" href="#an-efficient-app-framework" title="Permalink to this headline">¶</a></h2>
+<p>As described above, the generalized CelerApp protocol does not have any restriction on the state progression and finalization logic of an app channel. Therefore, various types of app framework can be easily supported. This section presents an <a class="reference external" href="https://github.com/celer-network/cApps-eth">example app framework</a> to build efficient turn-based state channel games, which is currently used by the <a class="reference external" href="https://celerx.app">CelerX</a> mobile and web SDK.</p>
+<p>The framework implements a simple turn-based app channel workflow:</p>
+<ul class="simple">
+<li>Players take turns to make the game moves off-chain by exchanging signed new game states.</li>
+<li>Players can dispute the game by submitting the off-chains states to the on-chain contract.</li>
+<li>Players may have to make moves on-chain to finalize the game state during the dispute.</li>
+</ul>
+<p>The rest of this section describes the structure and usage of this app framework in detail. Thanks to the flexibility of CelerPay and CelerApp architecture, the high-level design and each component of this framework can quickly evolve to achieve more features and better performance.</p>
+<div class="section" id="protobuf-message">
+<h3>Protobuf Message<a class="headerlink" href="#protobuf-message" title="Permalink to this headline">¶</a></h3>
+<p>Same with CelerPay, CelerApp also leverages Protobuf to define blockchain-neutral data structures that can be seamlessly used in the off-chain app interactions and on-chain operations.</p>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span> <span class="nc">AppState</span> <span class="p">{</span>
+    <span class="c1">// a number that is unique for each app session of the same players</span>
+    <span class="kt">uint64</span> <span class="na">nonce</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;uint&quot;</span><span class="p">];</span>
+    <span class="c1">// the app state sequence number</span>
+    <span class="kt">uint64</span> <span class="na">seq_num</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;uint&quot;</span><span class="p">];</span>
+    <span class="c1">// the serialized app specific state</span>
+    <span class="kt">bytes</span> <span class="na">state</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="c1">// on-chain response (challenge, action) timeout</span>
+    <span class="kt">uint64</span> <span class="na">timeout</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;uint&quot;</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">StateProof</span> <span class="p">{</span>
+    <span class="c1">// serialized AppState</span>
+    <span class="kt">bytes</span> <span class="na">app_state</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="c1">// players&#39; signatures of the app_state</span>
+    <span class="k">repeated</span> <span class="kt">bytes</span> <span class="na">sigs</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The app players make moves off-chain by sending the <code class="docutils literal notranslate"><span class="pre">StateProof</span></code> message to each other, and dispute by submitting the co-signed <code class="docutils literal notranslate"><span class="pre">StateProof</span></code> to the on-chain contracts.</p>
+</div>
+<div class="section" id="single-and-multi-session-apps">
+<h3>Single and Multi-Session Apps<a class="headerlink" href="#single-and-multi-session-apps" title="Permalink to this headline">¶</a></h3>
+<p>A CelerApp contract can be either a virtual or deployed contract, which is mapped to the single or multi-session app in the framework.</p>
+<div class="section" id="single-session-app">
+<h4>Single-Session App<a class="headerlink" href="#single-session-app" title="Permalink to this headline">¶</a></h4>
+<p>A single-session app is mostly used as a one-time virtual contract for fixed players without initial deployment. The player who wants to bring the off-chain game to on-chain dispute needs first to deploy the contract through the <a class="reference external" href="./pay_contracts.html#virtcontractresolver">VirtContractResolver</a>.</p>
+<p>Each single-session app has a virtual contract address that is computed through the hash of the code, the initial app states (constructor parameters), and a random nonce. Players send payments with conditions based on the virtual contract address (field 4 of the <a class="reference external" href="./pay_contracts.html#condition">Condition</a> message), and deploy the contract only when an on-chain dispute is needed. The list of players and the nonce should be given as constructor inputs to guarantee the uniqueness of each app session.</p>
+</div>
+<div class="section" id="multi-session-app">
+<h4>Multi-Session App<a class="headerlink" href="#multi-session-app" title="Permalink to this headline">¶</a></h4>
+<p>A multi-session app supports multiple groups of players playing games on the same contract. It is usually initially deployed once by the developer and then repeatedly shared by all players. No additional code needs to be deployed when a player wants to dispute on-chain. Multi-session app is more suitable for popular games because the (expensive) contract deployment is a one-time process, while the dispute cost for each player is much lower.</p>
+<p>Each game session of a multi-session app has a unique session ID, which is computed as the hash of the nonce and the players’ addresses (in ascending order): <code class="docutils literal notranslate"><span class="pre">session_id</span> <span class="pre">=</span> <span class="pre">Hash(nonce,</span> <span class="pre">players)</span></code>, where both <code class="docutils literal notranslate"><span class="pre">nonce</span></code> and <code class="docutils literal notranslate"><span class="pre">players</span></code> are extracted from the co-signed <code class="docutils literal notranslate"><span class="pre">StateProof</span></code> submitted during the on-chain dispute, so that it is not possible to forge a state to update the session maliciously.</p>
+<p>When using a multi-session app, players should send payments with conditions based on the deployed contract address (field 3 of the <a class="reference external" href="./pay_contracts.html#condition">Condition</a> message) with the session ID encoded in the query arguments (fields 5 and 6 of the <a class="reference external" href="./pay_contracts.html#condition">Condition</a> message).</p>
+</div>
+</div>
+<div class="section" id="contract-operations">
+<h3>Contract Operations<a class="headerlink" href="#contract-operations" title="Permalink to this headline">¶</a></h3>
+<p>Our app framework requires three basic on-chain operations for the app contracts: 1) submit off-chain states to the contract; 2) apply on-chain action; and 3) finalize the outcome after action timeout. The Solidity interfaces for app contracts are shown as follows:</p>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span> <span class="n">ISingleSession</span> <span class="p">{</span>
+    <span class="c1">// submit off-chain state and start to dispute the app on-chain</span>
+    <span class="kd">function</span> <span class="n">intendSettle</span><span class="p">(</span><span class="kt">bytes</span> <span class="n">calldata</span> <span class="n">_stateProof</span><span class="p">)</span> <span class="kr">external</span><span class="p">;</span>
+    <span class="c1">// apply an on-chain action to the app</span>
+    <span class="kd">function</span> <span class="n">applyAction</span><span class="p">(</span><span class="kt">bytes</span> <span class="n">calldata</span> <span class="n">_action</span><span class="p">)</span> <span class="kr">external</span><span class="p">;</span>
+    <span class="c1">// finalize the app outcome in case of on-chain action timeout</span>
+    <span class="kd">function</span> <span class="n">finalizeOnActionTimeout</span><span class="p">()</span> <span class="kr">external</span><span class="p">;</span>
+    <span class="c1">// omitted view functions to query various on-chain app states</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="kd">interface</span> <span class="n">IMultiSession</span> <span class="p">{</span>
+    <span class="c1">// submit off-chain state and start to dispute the session on-chain</span>
+    <span class="kd">function</span> <span class="n">intendSettle</span><span class="p">(</span><span class="kt">bytes</span> <span class="n">calldata</span> <span class="n">_stateProof</span><span class="p">)</span> <span class="kr">external</span><span class="p">;</span>
+     <span class="c1">// apply an on-chain action to a session</span>
+    <span class="kd">function</span> <span class="n">applyAction</span><span class="p">(</span><span class="kt">bytes32</span> <span class="n">_session</span><span class="p">,</span> <span class="kt">bytes</span> <span class="n">calldata</span> <span class="n">_action</span><span class="p">)</span> <span class="kr">external</span><span class="p">;</span>
+    <span class="c1">// finalize the session outcome in case of on-chain action timeout</span>
+    <span class="kd">function</span> <span class="n">finalizeOnActionTimeout</span><span class="p">(</span><span class="kt">bytes32</span> <span class="n">_session</span><span class="p">)</span> <span class="kr">external</span><span class="p">;</span>
+    <span class="c1">// omitted view functions to query various on-chain session states</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contract-templates">
+<h3>Contract Templates<a class="headerlink" href="#contract-templates" title="Permalink to this headline">¶</a></h3>
+<p>Our framework provides <a class="reference external" href="https://github.com/celer-network/cApps-eth/tree/master/contracts/templates">templates</a> in Solidity to implement the common on-chain logics for app dispute. Using the contract templates together with the CelerNode SDK that takes care of all the off-chain state channel logics, the CelerApp developers can just focus on the app-specific logic without being hassled by any state-channel-related logics such as signature verification, sequence number tracking, or state machine management.</p>
+<p>App contract developers <strong>only</strong> need to implement the following interfaces abstracted by the contract templates. For detailed usages, please refer to the <a class="reference external" href="https://github.com/celer-network/cApps-eth/tree/master/contracts/simple-app">simplest example contracts</a> and <a class="reference external" href="https://github.com/celer-network/cApps-eth/tree/master/test/simple-app">tests</a>.</p>
+<p><strong>SingleSessionApp template interface:</strong></p>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * </span><span class="cs">@notice</span><span class="cm"> Get the app outcome</span>
+<span class="cm"> * </span><span class="cs">@param</span><span class="cm"> _query Query args</span>
+<span class="cm"> * </span><span class="cs">@return</span><span class="cm"> True if query satisfied</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="n">getOutcome</span><span class="p">(</span><span class="kt">bytes</span> <span class="kr">memory</span> <span class="n">_query</span><span class="p">)</span> <span class="kr">public</span> <span class="kr">view</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bool</span><span class="p">);</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span><span class="cs">@notice</span><span class="cm"> Update app state according to an off-chain state proof</span>
+<span class="cm"> * </span><span class="cs">@param</span><span class="cm"> _state Signed off-chain app state</span>
+<span class="cm"> * </span><span class="cs">@return</span><span class="cm"> True if update succeeds</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="n">updateByState</span><span class="p">(</span><span class="kt">bytes</span> <span class="kr">memory</span> <span class="n">_state</span><span class="p">)</span> <span class="kr">internal</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bool</span><span class="p">);</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span><span class="cs">@notice</span><span class="cm"> Update app state according to an on-chain action</span>
+<span class="cm"> * </span><span class="cs">@param</span><span class="cm"> _action Action data</span>
+<span class="cm"> * </span><span class="cs">@return</span><span class="cm"> True if update succeeds</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="n">updateByAction</span><span class="p">(</span><span class="kt">bytes</span> <span class="kr">memory</span> <span class="n">_action</span><span class="p">)</span> <span class="kr">internal</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bool</span><span class="p">);</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span><span class="cs">@notice</span><span class="cm"> Finalize the app outcome in case of on-chain action timeout</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="n">finalizeOnTimeout</span><span class="p">()</span> <span class="kr">internal</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span><span class="cs">@notice</span><span class="cm"> Get app state associated with the given key</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="n">getState</span><span class="p">(</span><span class="kt">uint</span> <span class="n">_key</span><span class="p">)</span> <span class="kr">external</span> <span class="kr">view</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bytes</span> <span class="kr">memory</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><strong>MultiSessionApp template interface:</strong></p>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * </span><span class="cs">@notice</span><span class="cm"> Get the app session outcome</span>
+<span class="cm"> * </span><span class="cs">@param</span><span class="cm"> _session Session ID</span>
+<span class="cm"> * </span><span class="cs">@param</span><span class="cm"> _query Query arg</span>
+<span class="cm"> * </span><span class="cs">@return</span><span class="cm"> True if query satisfied</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="n">getOutcome</span><span class="p">(</span><span class="kt">bytes32</span> <span class="n">_session</span><span class="p">,</span> <span class="kt">bytes</span> <span class="kr">memory</span> <span class="n">_query</span><span class="p">)</span> <span class="kr">internal</span> <span class="kr">view</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bool</span><span class="p">);</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span><span class="cs">@notice</span><span class="cm"> Update session state according to off-chain state proof</span>
+<span class="cm"> * </span><span class="cs">@param</span><span class="cm"> _session Session ID</span>
+<span class="cm"> * </span><span class="cs">@param</span><span class="cm"> _state Signed off-chain state</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="n">updateByState</span><span class="p">(</span><span class="kt">bytes32</span> <span class="n">_session</span><span class="p">,</span> <span class="kt">bytes</span> <span class="kr">memory</span> <span class="n">_state</span><span class="p">)</span> <span class="kr">internal</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bool</span><span class="p">);</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span><span class="cs">@notice</span><span class="cm"> Update session state according to an on-chain action</span>
+<span class="cm"> * </span><span class="cs">@param</span><span class="cm"> _session Session ID</span>
+<span class="cm"> * </span><span class="cs">@param</span><span class="cm"> _action Action data</span>
+<span class="cm"> * </span><span class="cs">@return</span><span class="cm"> True if update succeeds</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="n">updateByAction</span><span class="p">(</span><span class="kt">bytes32</span> <span class="n">_session</span><span class="p">,</span> <span class="kt">bytes</span> <span class="kr">memory</span> <span class="n">_action</span><span class="p">)</span> <span class="kr">internal</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bool</span><span class="p">);</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span><span class="cs">@notice</span><span class="cm"> Finalize the session outcome in case of on-chain action timeout</span>
+<span class="cm"> * </span><span class="cs">@param</span><span class="cm"> _session Session ID</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="n">finalizeOnTimeout</span><span class="p">(</span><span class="kt">bytes32</span> <span class="n">_session</span><span class="p">)</span> <span class="kr">internal</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span><span class="cs">@notice</span><span class="cm"> Get app session state associated with the given key</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="n">getState</span><span class="p">(</span><span class="kt">bytes32</span> <span class="n">_session</span><span class="p">,</span> <span class="kt">uint</span> <span class="n">_key</span><span class="p">)</span> <span class="kr">external</span> <span class="kr">view</span> <span class="k">returns</span> <span class="p">(</span><span class="kt">bytes</span> <span class="kr">memory</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../sgn/availability.html" class="btn btn-neutral float-right" title="Off-Chain Availability Problem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pay_protocol.html" class="btn btn-neutral float-left" title="CelerPay Off-Chain Protocol" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Celer Network
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

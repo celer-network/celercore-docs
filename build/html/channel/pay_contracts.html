@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CelerPay On-Chain Contracts &mdash; CelerCore  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CelerPay Off-Chain Protocol" href="pay_protocol.html" />
+    <link rel="prev" title="Celer Channel Overview" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> CelerCore
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html">Layer-2 Blockchain Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html#what-is-celer">What is Celer?</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Channel Network</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Celer Channel Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CelerPay On-Chain Contracts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#core-data-structures">Core Data Structures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#duplex-payment-channel">Duplex Payment Channel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#simplex-channel-state">Simplex channel state</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#list-of-pending-pay-ids">List of pending pay IDs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#conditional-payment">Conditional Payment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#condition">Condition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transfer-function">Transfer function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#contracts-architecture">Contracts Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#celerwallet">CelerWallet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#celerledger">CelerLedger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#payresolver">PayResolver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#payregistry">PayRegistry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#virtcontractresolver">VirtContractResolver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ethpool">EthPool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conditions">Conditions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#channel-operations">Channel Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#open-channel">Open Channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deposit">Deposit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#withdraw">Withdraw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cooperative-withdraw">Cooperative withdraw</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unilateral-withdraw">Unilateral withdraw</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#resolve-payment">Resolve Payment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#resolve-payment-by-conditions">Resolve payment by conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#resolve-payment-by-vouched-result">Resolve payment by vouched result</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dispute-the-payment-result">Dispute the payment result</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#settle-close-channel">Settle/Close Channel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cooperative-settle">Cooperative settle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unilateral-settle">Unilateral settle</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#upgradability">Upgradability</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pay_protocol.html">CelerPay Off-Chain Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">CelerApp Contracts and Protocol</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Guardian Network</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/availability.html">Off-Chain Availability Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/architecture.html">SGN Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/guardian.html">SGN as Channel Guardian</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Liquidity Backing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/problem.html">State Channel Liquidity Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/backing.html">Celer Liquidity Backing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CelerCore</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>CelerPay On-Chain Contracts</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/channel/pay_contracts.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="celerpay-on-chain-contracts">
+<h1>CelerPay On-Chain Contracts<a class="headerlink" href="#celerpay-on-chain-contracts" title="Permalink to this headline">¶</a></h1>
+<p>This section describes the core structure of the Celer generalized payment channel, its smart contracts design, and the API flows of on-chain operations.</p>
+<p>CelerPay contracts have been implemented on Ethereum, which can be found at <a class="reference external" href="https://github.com/celer-network/cChannel-eth">cChannel-eth</a>. It includes a collection of smart contracts acting as the binding of core CelerPay abstractions and supporting modules. CeleryPay smart contracts only specify the interaction logic of two peers. A network of payment channels can be built using these single-hop primitives and protocols, which will be described in the later <a class="reference internal" href="pay_protocol.html"><span class="doc">off-chain protocol</span></a> section.</p>
+<hr class="docutils" />
+<div class="section" id="core-data-structures">
+<h2>Core Data Structures<a class="headerlink" href="#core-data-structures" title="Permalink to this headline">¶</a></h2>
+<p>We first introduce the structures of core elements. The whole design of CelerPay is centered around the concepts of <em>duplex payment channel</em> and <em>conditional payment</em>. It is essential to understand how these two elements are defined and connected, and how they are optimized to improve performance and cost-efficiency.</p>
+<div class="section" id="duplex-payment-channel">
+<h3>Duplex Payment Channel<a class="headerlink" href="#duplex-payment-channel" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../_images/channel-duplex.png" src="../_images/channel-duplex.png" />
+Figure above shows the logical data model of a CelerPay state channel between Alice and Bob. Note that not all information is needed to be stored on-chain. The model consists of two types of data about the payment channel peers:</p>
+<ul class="simple">
+<li>On-chain states shown in the solid boxes, mainly include peer addresses and amount of tokens they have deposited and withdrawn. Both the on-chain smart contracts and off-chain peer nodes maintain the full record of the on-chain states.</li>
+<li>Off-chain simplex states shown in the dashed boxes, mainly include the amount of tokens the peers have transferred to each other, their pending pays, and the state sequence numbers. The peers pay each other off-chain by co-signing new simplex states. The contracts do not store the full simplex states, only take them as function call inputs for critical on-chain operations.</li>
+</ul>
+<p>CelerPay uses full-duplex channel model for performance reasons. By decoupling the shared off-chain states into two unidirectional simplex states, two peers can pay each other concurrently. This significantly simplifies the off-chain protocol and improvements the off-chain payment throughput, as will be described in the <a class="reference internal" href="pay_protocol.html"><span class="doc">off-chain protocol</span></a> section.</p>
+<div class="section" id="simplex-channel-state">
+<h4>Simplex channel state<a class="headerlink" href="#simplex-channel-state" title="Permalink to this headline">¶</a></h4>
+<p>We define a simplex state using protobuf as below, with proto3 field option used for Solidity native types to support smart contracts running on EVM.</p>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="c1">// the simplex channel state from one peer to another</span>
+<span class="c1">// two simplex channels constitute a full-duplex channel</span>
+<span class="kd">message</span> <span class="nc">SimplexPaymentChannel</span> <span class="p">{</span>
+    <span class="c1">// unique channel ID per duplex channel</span>
+    <span class="kt">bytes</span> <span class="na">channel_id</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;bytes32&quot;</span><span class="p">];</span>
+    <span class="c1">// address of the peer who owns and updates the simplex state</span>
+    <span class="kt">bytes</span> <span class="na">peer_from</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;address&quot;</span><span class="p">];</span>
+    <span class="c1">// simplex state sequence number</span>
+    <span class="kt">uint64</span> <span class="na">seq_num</span> <span class="o">=</span> <span class="mi">3</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;uint&quot;</span><span class="p">];</span>
+    <span class="c1">// amount of token already transferred to peer, monotonically increasing</span>
+    <span class="n">TokenTransfer</span> <span class="na">transfer_to_peer</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="c1">// list of pending conditional payment IDs</span>
+    <span class="n">PayIdList</span> <span class="na">pending_pay_ids</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="c1">// the last resolve deadline for all pending pays</span>
+    <span class="kt">uint64</span> <span class="na">last_pay_resolve_deadline</span> <span class="o">=</span> <span class="mi">6</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;uint&quot;</span><span class="p">];</span>
+    <span class="c1">// total locked amount of all pending pays</span>
+    <span class="kt">bytes</span> <span class="na">total_pending_amount</span> <span class="o">=</span> <span class="mi">7</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;uint256&quot;</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This proto data representation is shared by the off-chain protocol and the on-chain smart contracts of all layer-1 blockchains. A simplex state is only valid if it is co-signed and has the highest sequence number. Given two valid simplex states and the on-chain states of a duplex channel, one can compute the peer balances at any time. For example, the available balance of peer <em>A</em> for its next payment is: <code class="docutils literal notranslate"><span class="pre">A.available</span> <span class="pre">=</span> <span class="pre">A.deposit</span> <span class="pre">-</span> <span class="pre">A.withdraw</span> <span class="pre">+</span> <span class="pre">B.transfer</span> <span class="pre">-</span> <span class="pre">A.transfer</span> <span class="pre">-</span> <span class="pre">A.pending</span></code></p>
+</div>
+<div class="section" id="list-of-pending-pay-ids">
+<h4>List of pending pay IDs<a class="headerlink" href="#list-of-pending-pay-ids" title="Permalink to this headline">¶</a></h4>
+<p>Details of the payment-related fields in the simplex state proto will be explained <a class="reference external" href="#conditional-payment">later</a>. One thing to emphasize here is how the summary of all pending conditional payments are stored in the simplex state (field 5). We do not use Merkle proof because maintaining the Merkle root for a highly dynamic dataset is computationally expensive; and it also greatly increases the number of on-chain transactions during the dispute process. Instead, the list of pending pay IDs is stored in the simplex state directly. <em>Sending or clearing a conditional payment off-chain is simply adding or removing the payment ID from the list (field 5), and updating the transfer amount (field 4) if needed</em>. On-chain contracts never need to store the pending pay IDs; they only need to scan the list from the input and compute the outcome in one transaction, as will be detailed in later sections. The proto message below shows the structure of the pending pay list used in the simplex state.</p>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="c1">// linked list of payID list to record arbitrarily number of pending pays</span>
+<span class="c1">// used in SimplexPaymentChannel field 5</span>
+<span class="kd">message</span> <span class="nc">PayIdList</span> <span class="p">{</span>
+    <span class="c1">// list of pay IDs</span>
+    <span class="k">repeated</span> <span class="kt">bytes</span> <span class="na">pay_ids</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;bytes32&quot;</span><span class="p">];</span>
+    <span class="c1">// hash of the next PayIdList</span>
+    <span class="kt">bytes</span> <span class="na">next_list_hash</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;bytes32&quot;</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All layer-1 blockchains have a <em>gas limit</em> to restrict how big data a single transaction can process. To overcome this restriction, we use a <em>linked list of lists</em> data structure to support a potentially large number of pending pays. In practice, we expect a single list should be enough for most cases. For example, in Ethereum, we can put at least hundreds of pay IDs in the list within the simplex state to be processed in a single transaction.</p>
+</div>
+</div>
+<div class="section" id="conditional-payment">
+<h3>Conditional Payment<a class="headerlink" href="#conditional-payment" title="Permalink to this headline">¶</a></h3>
+<p>Another key data structure of CelerPay is <em>conditional payment</em>, which is a conditional token transfer from one peer to another in the unidirectional simplex channel. The payment outcome can depend on multiple on-chain or off-chain conditions, with flexible condition resolving logics. Below is the proto representation of a conditional payment:</p>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="c1">// globally unique and immutable conditional payment</span>
+<span class="c1">// hash of the message is used to compute the pay ID in PayIdList field 1</span>
+<span class="kd">message</span> <span class="nc">ConditionalPay</span> <span class="p">{</span>
+    <span class="c1">// the unix nanoseconds timestamp, help ensure payment uniqueness</span>
+    <span class="kt">uint64</span> <span class="na">pay_timestamp</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;uint&quot;</span><span class="p">];</span>
+    <span class="c1">// public key used by pay source to vouch the pay result</span>
+    <span class="kt">bytes</span> <span class="na">src</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;address&quot;</span><span class="p">];</span>
+    <span class="c1">// public key used by pay destination to vouch the pay result</span>
+    <span class="kt">bytes</span> <span class="na">dest</span> <span class="o">=</span> <span class="mi">3</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;address&quot;</span><span class="p">];</span>
+    <span class="c1">// list of generic conditions for the payment</span>
+    <span class="k">repeated</span> <span class="n">Condition</span> <span class="na">conditions</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="c1">// payment amount resolve logic based on condition outcomes.</span>
+    <span class="n">TransferFunction</span> <span class="na">transfer_func</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="c1">// deadline for the pay to be resolved on-chain</span>
+    <span class="kt">uint64</span> <span class="na">resolve_deadline</span> <span class="o">=</span> <span class="mi">6</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;uint&quot;</span><span class="p">];</span>
+    <span class="c1">// challenge time window to resolve a pay on chain</span>
+    <span class="kt">uint64</span> <span class="na">resolve_timeout</span> <span class="o">=</span> <span class="mi">7</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;uint&quot;</span><span class="p">];</span>
+    <span class="c1">// address of the pay resolver contract</span>
+    <span class="kt">bytes</span> <span class="na">pay_resolver</span> <span class="o">=</span> <span class="mi">8</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;address&quot;</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All the fields are set by the pay source and are <strong>immutable</strong> while being relayed across multiple hops. Fields 2-8 are all useful when resolving a payment on-chain. The globally unique ID of a conditional payment is computed through the payment hash concatenated with the resolver address (field 8): <code class="docutils literal notranslate"><span class="pre">payID</span> <span class="pre">=</span> <span class="pre">Hash(Hash(pay)</span> <span class="pre">+</span> <span class="pre">pay.pay_resolver)</span></code>, which will be <a class="reference external" href="#payregistry">explained later</a>.</p>
+<p><strong>Note on decoupled architecture:</strong>
+The key members of a conditional payment are <code class="docutils literal notranslate"><span class="pre">conditions</span></code> and <code class="docutils literal notranslate"><span class="pre">transfer_func</span></code>. <code class="docutils literal notranslate"><span class="pre">Condition</span></code> can point to an address of an on-chain or virtual contract, with an assumption that the contract has an interface to check the finality and outcome of the condition. <code class="docutils literal notranslate"><span class="pre">TransferFunction</span></code> interprets the condition outcomes and resolves them to the final result regarding the allocated fund in the conditional payment. This decoupling of fund allocation and resolution leads to high flexibility, simplicity, robustness, and cost-efficiency.</p>
+<div class="section" id="condition">
+<h4>Condition<a class="headerlink" href="#condition" title="Permalink to this headline">¶</a></h4>
+<p>Each payment can be associated with a list of <code class="docutils literal notranslate"><span class="pre">Condition</span></code>, and a resolving logic <code class="docutils literal notranslate"><span class="pre">TransferFunction</span></code> which takes the conditions as input.</p>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="c1">// condition of a payment, used in ConditionalPay field 4</span>
+<span class="kd">message</span> <span class="nc">Condition</span> <span class="p">{</span>
+    <span class="c1">// three types: hash_lock, deployed_contract, virtual_contract</span>
+    <span class="n">ConditionType</span> <span class="na">condition_type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="c1">// one of the following three fields:</span>
+    <span class="c1">// 1. hash of the secret preimage</span>
+    <span class="kt">bytes</span> <span class="na">hash_lock</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;bytes32&quot;</span><span class="p">];</span>
+    <span class="c1">// 2. onchain deployed contract</span>
+    <span class="kt">bytes</span> <span class="na">deployed_contract_address</span> <span class="o">=</span> <span class="mi">3</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;address&quot;</span><span class="p">];</span>
+    <span class="c1">// 3. offchain virtual contract</span>
+    <span class="kt">bytes</span> <span class="na">virtual_contract_address</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">[(</span><span class="n">soltype</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;bytes32&quot;</span><span class="p">];</span>
+    <span class="c1">// arg to query condition status from the deployed or virtual contract</span>
+    <span class="kt">bytes</span> <span class="na">args_query_finalization</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="c1">// arg to query condition outcome from the deployed or virtual contract</span>
+    <span class="kt">bytes</span> <span class="na">args_query_outcome</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Message above shows the proto representation of a condition. There are three condition types:</p>
+<ul class="simple">
+<li><strong>Hash Lock Condition</strong>. This is used to secure a multi-hop payment. The payment source includes a hash <code class="docutils literal notranslate"><span class="pre">h</span></code> (field 2) of a secret preimage as a condition. The payment can only be resolved on-chain if the hash preimage <code class="docutils literal notranslate"><span class="pre">v</span></code> is revealed. Though hash lock could be also expressed through the contract conditions below, we separate it for protocol performance optimization.</li>
+<li><strong>Deployed Contract Condition</strong>. The condition could be based on the state of an on-chain deployed contract (field 3), which is able to implement arbitrary application logic. Such a contract needs to expose <code class="docutils literal notranslate"><span class="pre">isFinalized</span></code> and <code class="docutils literal notranslate"><span class="pre">getOutcome</span></code> APIs for the CelerPay contracts to query the states of the condition through arguments given in fields 5 and 6. The outcomes can be derived from state channel application results, oracle contract outputs, on-chain NFT ledgers, ENS name ownerships, roll-up chain states, etc.</li>
+<li><strong>Virtual Contract Condition</strong>. The condition can also stay off-chain as a virtual contract counterfactually instantiated by involved parties (e.g., payment source and destination). A virtual contract only needs to be deployed on-chain if someone wants to dispute, in which case CelerPay can find where to call the <code class="docutils literal notranslate"><span class="pre">isFinalized</span></code> and <code class="docutils literal notranslate"><span class="pre">getOutcome</span></code> APIs through a unique identifier (field 4) computed by the hash of the virtual contract code, initial states, and a nonce.</li>
+</ul>
+<p><strong>Note on decoupled architecture:</strong> <code class="docutils literal notranslate"><span class="pre">getOutcome</span></code> is a generic interface to get some data from the dependency contract that can be interpreted into arbitrary resolution results on the committed fund for the payment. While there are some common cases that we have implemented and optimized, this clean decoupling of application logic and fund allocation protocol allows the maximal level of flexibility.</p>
+</div>
+<div class="section" id="transfer-function">
+<h4>Transfer function<a class="headerlink" href="#transfer-function" title="Permalink to this headline">¶</a></h4>
+<p>Given the list of conditions, one can compute the payment amount according to the <code class="docutils literal notranslate"><span class="pre">transfer_func</span></code> field in the <code class="docutils literal notranslate"><span class="pre">ConditionalPay</span></code> message once all conditions have outcomes. Condition outcomes can be a boolean or numeric value. CelerPay supports flexible functionalities to resolve the payment amount based on condition outcomes. Below is the proto of the transfer function.</p>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="c1">// payment result resolving function, takes pay.conditions as input</span>
+<span class="c1">// used in ConditionalPay field 5</span>
+<span class="kd">message</span> <span class="nc">TransferFunction</span> <span class="p">{</span>
+    <span class="c1">// amount resolving logic based on the condition outcome</span>
+    <span class="n">TransferFunctionType</span> <span class="na">logic_type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="c1">// maximum token transfer amount of this payment</span>
+    <span class="n">TokenTransfer</span> <span class="na">max_transfer</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">enum</span> <span class="n">TransferFunctionType</span> <span class="p">{</span>
+    <span class="na">BOOLEAN_AND</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>     <span class="c1">// pay full amount if every condition is true</span>
+    <span class="na">BOOLEAN_OR</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>      <span class="c1">// pay full amount if any condition is true</span>
+    <span class="na">BOOLEAN_CIRCUIT</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">// customized boolean circuit logic, not supported yet</span>
+    <span class="na">NUMERIC_ADD</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>     <span class="c1">// pay the sum of all condition outcomes</span>
+    <span class="na">NUMERIC_MAX</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>     <span class="c1">// pay the max of all condition outcomes</span>
+    <span class="na">NUMERIC_MIN</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>     <span class="c1">// pay the min of all condition outcomes</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To summarize, <code class="docutils literal notranslate"><span class="pre">ConditionalPay</span></code> is a self-contained unit that carries all the information related to a conditional payment. We will elaborate how to <a class="reference internal" href="pay_protocol.html"><span class="doc">send/receive a payment off-chain</span></a> and how to <a class="reference external" href="#resolve-payment">resolve a payment on-chain</a> in case of dispute in later sections.</p>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="contracts-architecture">
+<h2>Contracts Architecture<a class="headerlink" href="#contracts-architecture" title="Permalink to this headline">¶</a></h2>
+<p><img alt="../_images/channel-contracts.png" src="../_images/channel-contracts.png" />
+Figure above shows the CelerPay contracts architecture of our current Ethereum implementation. White dashed modules at the bottom are user off-chain components. Each colored rectangle is an individual on-chain contract. Blue modules are CelerPay contracts (ones with dashed border are <a class="reference external" href="#upgradability">upgradable</a>); green modules are external arbitrary condition contracts; orange arrows are external function calls (with single-word functionality summaries) among contracts; black arrows are external function calls from CelerNodes (off-chain users).</p>
+<p>The major reason to have multiple contracts is to enable efficient module upgrade, which will be discussed <a class="reference external" href="#upgradability">later</a>. This section gives a high-level walkthrough of all the CelerPay contracts, explains their roles and relationships. The detailed CelerPay on-chain functionalities and logics will be discussed in the <a class="reference external" href="#channel-operations">channel operations section</a>.</p>
+<div class="section" id="celerwallet">
+<h3>CelerWallet<a class="headerlink" href="#celerwallet" title="Permalink to this headline">¶</a></h3>
+<p>The CelerWallet contract keeps the multi-owner and multi-token wallets for all the payment channels. CelerWallet only holds tokens for the channel peers without any complicated payment channel logics, which are programmed in the CelerLedger contract. It is extremely robust and safe due to its simplicity. Payment channel peers (CelerNodes) do not directly interact with the CelerWallet contract to operate their funds, but through the wallet operator: the CelerLedger contract, which we describe below.</p>
+</div>
+<div class="section" id="celerledger">
+<h3>CelerLedger<a class="headerlink" href="#celerledger" title="Permalink to this headline">¶</a></h3>
+<p>CelerLedger is central of all CelerPay contracts, and the <em>entry point</em> of most of the <a class="reference external" href="#channel-operations">on-chain user operations</a>. It defines the CelerPay <a class="reference external" href="#channel-state-machine">on-chain state machine</a>, maintains the core logic of a payment channel, acts as the operator of CelerWallet to operate on the token assets, and expose a rich set of <a class="reference external" href="https://github.com/celer-network/cChannel-eth/blob/master/contracts/lib/interface/ICelerLedger.sol">APIs</a> for users (channel peers) to manage the payment channels. CelerLedger calls the external functions of three contracts when executing its logic:</p>
+<ul class="simple">
+<li>To CelerWallet: operation on CelerWallet to deposit/withdraw funds, or transfer operatorship.</li>
+<li>To EthPool: transfer ETH to CelerWallet, enable the single-transaction channel opening.</li>
+<li>To PayRegistry: query about the resolved payment amount when settling a channel.</li>
+</ul>
+<p><strong>Notes on Ethereum Implementation</strong>. CelerLedger has complicated logic which could lead to a very large single contract that exceeds the Ethereum’s 24KB contract size limit (<a class="reference external" href="http://bit.ly/2kHg8em">EIP #170</a>). To overcome this limitation, we leverage techniques of <em><a class="reference external" href="https://blog.aragon.org/library-driven-development-in-solidity-2bebcaf88736/">Library Driven Development in Solidity</a></em> to reconstruct the CelerLedger logic by dividing different functionality modules into separated deployable <a class="reference external" href="https://github.com/celer-network/cChannel-eth/tree/master/contracts/lib/ledgerlib">libraries</a>.</p>
+</div>
+<div class="section" id="payresolver">
+<h3>PayResolver<a class="headerlink" href="#payresolver" title="Permalink to this headline">¶</a></h3>
+<p>PayResolver defines the payment resolving logic. It exposes two <a class="reference external" href="https://github.com/celer-network/cChannel-eth/blob/master/contracts/lib/interface/IPayResolver.sol">APIs</a> to let a CelerNode resolve a payment on-chain if it cannot clear the payment off-chain with its channel peer cooperatively. PayResolver call external functions of other contracts when executing its logic:</p>
+<ul class="simple">
+<li>To PayRegistry: set the resolved payment amount in the global payment information registry.</li>
+<li>To Conditions: query the condition outcomes when computing the payment finalized amount.</li>
+<li>To VirtContractResolver: query the address of an instantiated (deployed) virtual contract.</li>
+</ul>
+</div>
+<div class="section" id="payregistry">
+<h3>PayRegistry<a class="headerlink" href="#payregistry" title="Permalink to this headline">¶</a></h3>
+<p>PayRegistry is the global registry to store the resolved amount of all payments. It exposes simple <a class="reference external" href="https://github.com/celer-network/cChannel-eth/blob/master/contracts/lib/interface/IPayRegistry.sol">APIs</a> for anyone to set a payment result indexed by the payment ID. PayRegistry calculates the payment ID as <code class="docutils literal notranslate"><span class="pre">payID</span> <span class="pre">=</span> <span class="pre">Hash(Hash(pay),</span> <span class="pre">setterAddress)</span></code>, where <em>setter</em> is usually the PayResolver. In this way, each payment’s result can only be set in the registry by its self-specified resolver contract (field 8 of the <a class="reference external" href="#conditional-payment">ConditionalPay message</a>). A payment result becomes immutable and publicly available once it is finalized on the PayRegistry. Then all channels that have the payment in pending status can use the result from the registry to clear the payment either off-chain or on-chain.</p>
+</div>
+<div class="section" id="virtcontractresolver">
+<h3>VirtContractResolver<a class="headerlink" href="#virtcontractresolver" title="Permalink to this headline">¶</a></h3>
+<p>VirtContractResolver instantiates an off-chain virtual contract and establishes the mapping from the virtual contract address (field 4 of <a class="reference external" href="#condition">Condition Message</a>) to the instantiated on-chain address. It makes the virtual contract become an on-chain addressable condition contract for the PayResolver to query when resolving payments associated with the virtual contract condition.</p>
+</div>
+<div class="section" id="ethpool">
+<h3>EthPool<a class="headerlink" href="#ethpool" title="Permalink to this headline">¶</a></h3>
+<p>EthPool is a simple ETH wallet contract that provides ERC20-like APIs for ETH, and an additional API to make ETH deposit into CelerPay more flexible and efficient. EthPool enables the <em>single-transaction channel opening</em> feature of CelerPay.</p>
+</div>
+<div class="section" id="conditions">
+<h3>Conditions<a class="headerlink" href="#conditions" title="Permalink to this headline">¶</a></h3>
+<p>Conditions are not part of the CelerPay contracts, but external <a class="reference internal" href="app.html"><span class="doc">CelerApp</span></a> contracts for the PayResolver to query through the <code class="docutils literal notranslate"><span class="pre">isFinalized</span></code> and <code class="docutils literal notranslate"><span class="pre">getOutcome</span></code> APIs when resolving payments. A condition contract can be either an initially on-chain deployed contract, or an instantiated virtual contract. Any contract can become a CelerPay condition by exposing the two required APIs.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="channel-operations">
+<h2>Channel Operations<a class="headerlink" href="#channel-operations" title="Permalink to this headline">¶</a></h2>
+<p>This section describes the detailed mechanisms of the major CelerPay user on-chain operations, including open channel, deposit/withdraw funds, resolve payments, and close channel. Though CelerPay expects most of the payment transactions happen off-chain, it is still deeply optimized for handling the infrequent but inevitable on-chain operations.</p>
+<p>CelerLedger manages the payment channel on-chain state and serves as the primary entry point for user on-chain operations. There are five possible states for each payment channel:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">Uninitialized</span></code>: a channel that has not been set up yet in the current CelerLedger contract.</li>
+<li><code class="docutils literal notranslate"><span class="pre">Operable</span></code>: a channel that is active for regular use.</li>
+<li><code class="docutils literal notranslate"><span class="pre">Settling</span></code>: a channel that is in the unilateral settling state.</li>
+<li><code class="docutils literal notranslate"><span class="pre">Closed</span></code>: a channel that is closed.</li>
+<li><code class="docutils literal notranslate"><span class="pre">Migrated</span></code>: a channel that has been migrated to another CelerLedger contract.</li>
+</ul>
+<div class="section" id="open-channel">
+<h3>Open Channel<a class="headerlink" href="#open-channel" title="Permalink to this headline">¶</a></h3>
+<p>The CelerLedger contract exposes an <code class="docutils literal notranslate"><span class="pre">openChannel</span></code> API which allows a funded payment channel to be opened a single transaction. The API takes a single input, which is the channel peer co-signed payment channel initializer message. Once the CelerLedger contract receives a valid open channel request, it will execute the following operations in a <em>single</em> transaction:</p>
+<ol class="simple">
+<li>Create a wallet in the CelerWallet contract and use the returned wallet ID as the channel ID, which is computed as <code class="docutils literal notranslate"><span class="pre">Hash(walletAddress,</span> <span class="pre">ledgerAddress,</span> <span class="pre">Hash(channelInitializer))</span></code>.</li>
+<li>Initialize the channel state in the CelerLedger contract.</li>
+<li>Accept the blockchain native tokens (ETH) sent along with the transaction request, and transfer tokens from the peers’ approved token pools (e.g., EthPool or ERC20 contracts) to the CelerWallet according to the requested initial distribution amounts.</li>
+</ol>
+</div>
+<div class="section" id="deposit">
+<h3>Deposit<a class="headerlink" href="#deposit" title="Permalink to this headline">¶</a></h3>
+<p>Anyone, not only the channel peer, can deposit funds into a payment channel by calling the <code class="docutils literal notranslate"><span class="pre">deposit</span></code> API of CelerLedger. The API takes three arguments: the <em>channel ID</em>, the <em>receiver address</em>, and the <em>deposit amount</em>. The CelerLedger contract will check if the token type matches and then transfer the tokens from the API caller to the channel’s wallet in the CelerWallet contract.</p>
+<p>Note that though all tokens are eventually deposited in the CelerWallet contract, any prerequisite <code class="docutils literal notranslate"><span class="pre">approve</span></code> transactions for ERC20 or EthPool tokens must be given to the CelerLedger contract.</p>
+</div>
+<div class="section" id="withdraw">
+<h3>Withdraw<a class="headerlink" href="#withdraw" title="Permalink to this headline">¶</a></h3>
+<p>Peers can withdraw funds from the channel anytime. CelerLedger supports both <strong>cooperative</strong> and <strong>unilateral</strong> withdrawals. The former is a fast single transaction, while the latter involves two transactions and challenge time window.</p>
+<div class="section" id="cooperative-withdraw">
+<h4>Cooperative withdraw<a class="headerlink" href="#cooperative-withdraw" title="Permalink to this headline">¶</a></h4>
+<p>When both peers are online and cooperative, the withdrawer can finish the operation within one quick transaction by calling the <code class="docutils literal notranslate"><span class="pre">cooperativeWithdraw</span></code> API and submitting the peer co-signed cooperative withdrawal message. Once the co-signed message is submitted, the CelerLedger contract will transfer the tokens from the channel’s wallet in the CelerWallet contract to either the account address or another channel as specified in the co-signed withdrawal message.</p>
+</div>
+<div class="section" id="unilateral-withdraw">
+<h4>Unilateral withdraw<a class="headerlink" href="#unilateral-withdraw" title="Permalink to this headline">¶</a></h4>
+<p>When the withdrawer is not able to find its peer to co-sign the above cooperative withdrawal message, it can initiate a unilateral withdraw by calling the <code class="docutils literal notranslate"><span class="pre">intendWithdraw</span></code> function, which takes the <em>channel ID</em>, <em>withdrawal amount</em>, and the optional <em>recipient channel ID</em> as inputs. Once the transaction is submitted, the challenge time window is opened for the other peer to call <code class="docutils literal notranslate"><span class="pre">vetoWithdraw</span></code> if it does not approve the withdrawal. After the challenge window closed, if the other peer did not veto, the withdrawer can call <code class="docutils literal notranslate"><span class="pre">confirmWithdraw</span></code> to finish the operation.</p>
+</div>
+</div>
+<div class="section" id="resolve-payment">
+<h3>Resolve Payment<a class="headerlink" href="#resolve-payment" title="Permalink to this headline">¶</a></h3>
+<p>When peers cannot cooperatively clear a payment off-chain, they can resolve the payment on-chain through APIs of the <a class="reference external" href="#payresolver">PayResolver</a> contract before the payment resolve deadline (field 6 of the <a class="reference external" href="#conditional-payment">ConditionalPay Message</a>), which writes the result in the global <a class="reference external" href="#payregistry">PayRegistry</a>. A payment can be resolved on-chain either by the payment condition results or the vouched result co-signed by the payment source and destination.</p>
+<div class="section" id="resolve-payment-by-conditions">
+<h4>Resolve payment by conditions<a class="headerlink" href="#resolve-payment-by-conditions" title="Permalink to this headline">¶</a></h4>
+<p>One can call the <code class="docutils literal notranslate"><span class="pre">resolvePaymentByConditions</span></code> API of the PayResolver once all conditions of a payment are finalized on-chain. The API input consists of two pieces of information: 1) the full <em>conditional payment</em> data and 2) all <em>hash preimages</em> of the hash locks associated with the payment. Then the PayResolver will verify the hash preimages, query the condition outcomes, then compute and set the payment result in the PayRegistry, as depicted in the <a class="reference external" href="#contracts-architecture">contracts architecture figure</a>.</p>
+<p>Whoever tries to resolve a payment by conditions needs to make sure the conditions are all finalized on-chain, otherwise the transaction will fail. Conditions on virtual contracts need to be first instantiated on-chain through the VirtContractResolver contract. These are considered as parts of the CelerApp instead of the CelerPay operations.</p>
+<p>Only the payment source or destination may initiate the transaction to resolve a payment by the conditions. An intermediate relay node never calls this API for a payment. The later <a class="reference external" href="./pay_protocol.html#dispute-the-payment-on-chain">off-chain protocol</a> section will explain the flow in detail.</p>
+</div>
+<div class="section" id="resolve-payment-by-vouched-result">
+<h4>Resolve payment by vouched result<a class="headerlink" href="#resolve-payment-by-vouched-result" title="Permalink to this headline">¶</a></h4>
+<p>The payment relay node never needs to care about the internal conditions, but only the amount they should safely receive from upstream and pay to the downstream. CelerPay provides a unique feature to let relay nodes quickly resolve a payment on-chain with their peers through the vouched result co-signed by the source and destination (field 2 and 3 of the <a class="reference external" href="#conditional-payment">ConditionalPay</a> message).</p>
+<p>As will be elaborated in the <a class="reference external" href="./pay_protocol.html#pay-with-numeric-conditions">off-chain protocol</a> section, every node along the payment route can use that as a proof to ask its upstream peer to clear the payment according to the vouched amount. Any node who has the co-signed vouched result can call the <code class="docutils literal notranslate"><span class="pre">resolvePaymentByVouchedResult</span></code> API to resolve this payment on-chain and set the result in the PayRegistry.</p>
+</div>
+<div class="section" id="dispute-the-payment-result">
+<h4>Dispute the payment result<a class="headerlink" href="#dispute-the-payment-result" title="Permalink to this headline">¶</a></h4>
+<p>All CelerNodes along a payment route share the result of the payment in the PayRegistry. Proper on-chain and off-chain mechanisms are required to guarantee the security of the relay nodes in case of colluding payment source and destination co-sign different vouched results or manipulate the condition outcomes maliciously. PayResolver writes a payment result to the PayRegistry according to the following rules:</p>
+<ul class="simple">
+<li>If the resolving result equals to the maximum amount of the transfer function (field 5 of the <a class="reference external" href="#conditional-payment">ConditionalPay</a> message), the result is instantly finalized in the PayRegistry.</li>
+<li>Otherwise, a challenge time window (according to field 7 of the <a class="reference external" href="#conditional-payment">ConditionalPay</a> message) is opened for others to resolve the same payment (with potentially different input messages). Once a result is written in the PayRegistry, it can only be updated to a <em>larger amount</em> before finalization, which is a joint design with the <a class="reference external" href="./pay_protocol.html#pay-with-numeric-conditions">off-chain protocol</a>. The payment result gets finalized after the challenge window closed or the resolve deadline passed, whichever comes earlier.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="settle-close-channel">
+<h3>Settle/Close Channel<a class="headerlink" href="#settle-close-channel" title="Permalink to this headline">¶</a></h3>
+<p>A CelerNode can choose to settle/close a channel with its peer either cooperatively or unilaterally, similar to the withdrawal operation. Cooperative settling is the preferred method as it is a fast single transaction. Unilateral settling only happens when two peers cannot agree with each other, or one peer cannot be found to co-sign the cooperative settle request.</p>
+<div class="section" id="cooperative-settle">
+<h4>Cooperative settle<a class="headerlink" href="#cooperative-settle" title="Permalink to this headline">¶</a></h4>
+<p>The CelerLedger contract exposes a <code class="docutils literal notranslate"><span class="pre">cooperativeSettle</span></code> API which the peer co-signed cooperative settle request information as input. Once the contract receives the co-signed request, it will close the channel and distribute the balances according to the requested amounts. Both off-chain simplex channel states including all the pending payments will be ignored when executing a cooperative settle transaction.</p>
+</div>
+<div class="section" id="unilateral-settle">
+<h4>Unilateral settle<a class="headerlink" href="#unilateral-settle" title="Permalink to this headline">¶</a></h4>
+<p>If cooperative settling is not possible, a peer can initiate a unilateral settling by calling the <code class="docutils literal notranslate"><span class="pre">intendSettle</span></code> API, which takes the co-signed off-chain simplex states as input. The CelerLedger contract will compute the settled balance distributions based on the simplex states and the results of pending payments queried from the PayRegistry.</p>
+<p>A challenge time window is opened after the unilateral settle request, for the other peer to submit simplex channel states with higher sequence numbers if exist. After the challenge window is closed, one can call the <code class="docutils literal notranslate"><span class="pre">confirmSettle</span></code> API to finish the operation and close the channel.</p>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="upgradability">
+<h2>Upgradability<a class="headerlink" href="#upgradability" title="Permalink to this headline">¶</a></h2>
+<p>While upgradability is an essential requirement for a production system to add new features and fix bugs, a smart contract cannot be modified once it is deployed on the blockchain. This makes blockchain contracts upgrade an important and non-trivial problem. Fortunately, upgrading a payment channel is relatively easier, because only the channel peers need to be involved. The most straightforward way is to let two peers cooperatively close the existing channel and then open a new channel on the new contracts, which is an expensive process with long system downtime. CelerPay contracts aim to improve this process with two goals:</p>
+<ul class="simple">
+<li>The upgrade mechanism should be trust-free, which means only the peers can control the code of their channel contracts and the funds in the channel.</li>
+<li>The upgrade process should be easy and smooth, making the least friction on the user side, with zero system downtime in most cases.</li>
+</ul>
+<p>We do not use <em>delegatecall</em>-based proxy mechanism, because it “requires that memory layouts stay consistent between contract and compiler upgrades” (quote from <a class="reference external" href="https://blog.trailofbits.com/2018/09/05/contract-upgrade-anti-patterns/">Trail of Bits Blog</a>), which needs meticulous attention and can be out of our control (e.g., compiler upgrade). Instead, we choose a contract upgradability design similar to the <em>Partially Upgradeable Contract Systems</em> described in <a class="reference external" href="https://blog.indorse.io/ethereum-upgradeable-smart-contract-strategies-456350d0557c">Jack Tanner’s article</a>. The CelerPay on-chain logics are divided into two sets of contracts, as depicted in the <a class="reference external" href="#contracts-architecture">contracts architecture figure</a>.</p>
+<ul class="simple">
+<li><strong>Non-upgradable CelerWallet, PayRegistry, VirtContractResolver, and EthPool</strong>. These modules hold token assets and critical data. They have very simple logics that are unlikely to change, and are heavily audited to guarantee security and stability.</li>
+<li><strong>Upgradable CelerLedger and PayResolver</strong>. These two modules implement most of the complicated payment channel logics and serve as the entry points of user operations. They are more likely to be modified to introduce new features, such as new channel operations or new payment condition types and resolving functions.</li>
+</ul>
+<p>By “<strong>upgradable</strong>” we mean channel peers can cooperatively <strong>switch to another version of the contract for their existing channel without any off-chain downtime</strong>. The upgrade behavior is more like a channel “migration”. Therefore, we use “migrate/migration” in the API naming and use “migrate” and “upgrade” interchangeably for convenience.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pay_protocol.html" class="btn btn-neutral float-right" title="CelerPay Off-Chain Protocol" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="overview.html" class="btn btn-neutral float-left" title="Celer Channel Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Celer Network
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

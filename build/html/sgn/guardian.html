@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SGN as Channel Guardian &mdash; CelerCore  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="State Channel Liquidity Problem" href="../liquidity/problem.html" />
+    <link rel="prev" title="SGN Architecture" href="architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> CelerCore
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html">Layer-2 Blockchain Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html#what-is-celer">What is Celer?</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Channel Network</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../channel/overview.html">Celer Channel Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../channel/pay_contracts.html">CelerPay On-Chain Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../channel/pay_protocol.html">CelerPay Off-Chain Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../channel/app.html">CelerApp Contracts and Protocol</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Guardian Network</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="availability.html">Off-Chain Availability Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">SGN Architecture</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SGN as Channel Guardian</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#service-flow">Service Flow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fast-mode">Fast Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#private-mode">Private Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#guardian-assignment">Guardian Assignment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#security-analysis">Security Analysis</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Liquidity Backing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/problem.html">State Channel Liquidity Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/backing.html">Celer Liquidity Backing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CelerCore</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>SGN as Channel Guardian</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/sgn/guardian.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sgn-as-channel-guardian">
+<h1>SGN as Channel Guardian<a class="headerlink" href="#sgn-as-channel-guardian" title="Permalink to this headline">¶</a></h1>
+<p>Payment channel guardian is the most important service of SGN, as it eliminates the <a class="reference internal" href="availability.html"><span class="doc">security risks</span></a> of using payment state channel. A subscribed payment channel client can sync its latest off-chain state to the SGN sidechain and then safely go offline without worrying about losing its local data or channel being maliciously closed by its peer.</p>
+<hr class="docutils" />
+<div class="section" id="service-flow">
+<h2>Service Flow<a class="headerlink" href="#service-flow" title="Permalink to this headline">¶</a></h2>
+<p><img alt="../_images/guardian.png" src="../_images/guardian.png" /></p>
+<p>Figure above illustrates the basic channel guardian service flow. Numbers in brackets show the order of the events. A subscribed user can keep sending <code class="docutils literal notranslate"><span class="pre">guardRequest</span></code> to the sidechain within its allowed request rate. The request is stored by all sidechain validators who also serve as channel guardians. Each guardian keeps monitoring the mainchain payment channel <code class="docutils literal notranslate"><span class="pre">IntendSettle</span></code> event. Once an event on a guarded channel is caught, the guardians will compare the attempt sequence number and the guarded sequence number, and respond to the settle event at its assigned time slot if the guarded number is larger. The guarded state can be retrieved by the user through the <code class="docutils literal notranslate"><span class="pre">getChannelState</span></code> sidechain API. There are two service modes at the user’s choice.</p>
+<div class="section" id="fast-mode">
+<h3>Fast Mode<a class="headerlink" href="#fast-mode" title="Permalink to this headline">¶</a></h3>
+<p>The easy and straightforward way is to send a guard request that contains the latest cosigned state proof. When the guardian responds to a settle attempt, it just sends the <code class="docutils literal notranslate"><span class="pre">intendSettle</span></code> transaction with its guarded state proof. Then the channel is ready to be closed by whoever sending <code class="docutils literal notranslate"><span class="pre">confirmSettle</span></code> transaction after the settling process is finalized.</p>
+<p>One potential concern of this fast mode is user privacy, as the sidechain validators see the user’s every state proof from each guard request, from which one can construct the history of the user’s off-chain balances. The state proof contains pending pay IDs, which do not reveal any detailed info of the payment such as source, destination, or conditions. However, if many nodes along the off-chain payment routing path use channel guardian fast mode, then one may still be able to track the (partial) path of the payment. Nevertheless, we believe fast mode can meet the needs of most people, because most payment info is still private in this mode, and off-chain payments have strictly better privacy than on-chain payments anyway.</p>
+</div>
+<div class="section" id="private-mode">
+<h3>Private Mode<a class="headerlink" href="#private-mode" title="Permalink to this headline">¶</a></h3>
+<p>If a user wants to hide its off-chain balance history, it can use private mode by including the following information in the guard request:</p>
+<ul class="simple">
+<li><strong>Cosigned channel, peer, sequence number</strong>(<code class="docutils literal notranslate"><span class="pre">cps</span></code>). In order to be protected from malicious channel settle attempts without exposing more private info than needed, the user only needs to provide the minimal information <code class="docutils literal notranslate"><span class="pre">cps</span> <span class="pre">=</span> <span class="pre">&lt;channel_id,</span> <span class="pre">peer_from,</span> <span class="pre">seq_num,</span> <span class="pre">signatures&gt;</span></code> to the sidechain. Guardians who have this data can send <code class="docutils literal notranslate"><span class="pre">vetoSettle</span></code> transaction to stop the settle attempts with small sequence numbers, but cannot close the channel as in the fast mode. When the user comes back online, the channel will be still in operating mode.</li>
+<li><strong>Encrypted full cosigned state proof</strong> (optional). This is only needed if the user wants to back up its local state proof but does not want to use centralized cloud storage services.</li>
+</ul>
+<p>The cost of private mode is communication overhead. The payment channel peers need to cosign the <code class="docutils literal notranslate"><span class="pre">cps</span></code> in addition to the full simplex state for each off-chain payment. Note that a channel peer must make sure it has the cosigned full state before signing and sending out <code class="docutils literal notranslate"><span class="pre">cps</span></code> with the same sequence number. Otherwise, a malicious payment receiver can permanently block the channel being closed by keep vetoing all settle intents. Here is the safe off-chain message sequence for peer <em>A</em> to send a payment to peer <em>B</em> in private mode.</p>
+<ol class="simple">
+<li><em>A</em> sends <em>B</em> a new simplex state with <em>A</em>’s signature.</li>
+<li><em>B</em> replies to <em>A</em> with <em>B</em>’s signature of the new simplex state. Within the reply message, <em>B</em> also includes the separate <code class="docutils literal notranslate"><span class="pre">cps</span></code> info of the new simplex state with its own signature.</li>
+<li><em>A</em> receives the cosigned new simplex state, and replies to <em>B</em> with A’s signature of the new <code class="docutils literal notranslate"><span class="pre">cps</span></code> data. <em>B</em> considers the payment receiving process completed after received the cosigned <code class="docutils literal notranslate"><span class="pre">cps</span></code>.</li>
+</ol>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="guardian-assignment">
+<h2>Guardian Assignment<a class="headerlink" href="#guardian-assignment" title="Permalink to this headline">¶</a></h2>
+<p>Though all validators store all user requests, only one response transaction is needed for one malicious settle attempt. The sidechain coordinates validators to guard each channel in a specific order. For each payment channel, the sidechain randomly selects <em>N</em> validators as the <em>assigned</em> guardians <code class="docutils literal notranslate"><span class="pre">G_1,</span> <span class="pre">G_2,</span> <span class="pre">...,</span> <span class="pre">G_N</span></code> in a specific order, and makes the rest validators as <em>standby</em> guardians for this channel. Once a malicious settle attempt for this channel is caught, the dispute time window will be divided into <em>N+1</em> slots. Guardian <code class="docutils literal notranslate"><span class="pre">G_i</span></code> is responsible for sending the response transaction at time slot <em>i</em> if the previous assigned guardians did not finish the job. If an assigned guardian failed to guard the channel at its time slot, it would get <em>slashed</em>, and the part of slashed tokens from the guardian’s staking pool will be rewarded to the later guardian who finished the job. If all <em>N assigned</em> guardians failed, any of the <em>standby</em> guardians could send the mainchain transaction to guard the channel and receive the slashed tokens from the assigned guardians.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="security-analysis">
+<h2>Security Analysis<a class="headerlink" href="#security-analysis" title="Permalink to this headline">¶</a></h2>
+<p>The core advantage of SGN as channel guardian is decentralized trust and fault tolerance. From the user’s perspective, there are two steps of the service flow: 1) request accepted by the sidechain; and 2) channel guarded by the sidechain. The first step requires BFT consensus, so the guard request will be accepted by the sidechain as long as validators with more than 2/3 voting power are following the system protocol correctly. Once the user gets a confirmation that the request has been accepted, the sidechain provides <em>trust any</em> guarantee for the second step, which means the user’s channel is safe as long as <em>any</em> sidechain validator follows the protocol correctly. These are very strong security and reliability guarantees.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../liquidity/problem.html" class="btn btn-neutral float-right" title="State Channel Liquidity Problem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="architecture.html" class="btn btn-neutral float-left" title="SGN Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Celer Network
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

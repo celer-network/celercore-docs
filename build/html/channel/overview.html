@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Celer Channel Overview &mdash; CelerCore  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CelerPay On-Chain Contracts" href="pay_contracts.html" />
+    <link rel="prev" title="Layer-2 Blockchain Scaling" href="../intro/introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> CelerCore
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html">Layer-2 Blockchain Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/introduction.html#what-is-celer">What is Celer?</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Channel Network</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Celer Channel Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-architecture">System Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#design-principles">Design Principles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#minimize-on-chain-footprint">Minimize on-chain footprint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#minimize-relay-node-on-chain-interaction">Minimize relay node on-chain interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#minimize-on-chain-view-calls">Minimize on-chain view calls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#minimize-off-chain-communication-overhead">Minimize off-chain communication overhead</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#enable-low-cost-decentralized-system-upgrade">Enable low-cost decentralized system upgrade</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#platform-interoperability">Platform Interoperability</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#protobuf-messages">Protobuf Messages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#protobuf-add-ons">Protobuf add-ons</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pay_contracts.html">CelerPay On-Chain Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pay_protocol.html">CelerPay Off-Chain Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">CelerApp Contracts and Protocol</a></li>
+</ul>
+<p class="caption"><span class="caption-text">State Guardian Network</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/availability.html">Off-Chain Availability Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/architecture.html">SGN Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sgn/guardian.html">SGN as Channel Guardian</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Liquidity Backing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/problem.html">State Channel Liquidity Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../liquidity/backing.html">Celer Liquidity Backing</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CelerCore</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Celer Channel Overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/channel/overview.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="celer-channel-overview">
+<h1>Celer Channel Overview<a class="headerlink" href="#celer-channel-overview" title="Permalink to this headline">¶</a></h1>
+<p>Layer-1 blockchain systems have shown dramatic potential in disrupting many industries. However, their discouraging performance, including high cost, low throughput and high latency, impede the massive adoption of blockchain applications. By moving transactions to the layer-2 off-chain systems instead of broadcasting transactions through slow consensus process, we can achieve horizontal scaling, instant finality, drastically lower cost and more privacy.</p>
+<p>This chapter introduces the design and implementation of a production-ready, highly scalable and reliable state channel network. We assume readers have basic knowledge of generalized state channels described in the <a class="reference internal" href="../intro/introduction.html"><span class="doc">introduction chapter</span></a>. Celer’s state channel network is a generic framework of state channels with deeply optimized on-chain contracts and off-chain messaging protocols. While the initial implementation is based on Ethereum, the core framework and protocols are designed to be flexible and blockchain-agnostic, able to be quickly integrated with other layer-1 blockchains with minimum efforts.</p>
+<hr class="docutils" />
+<div class="section" id="system-architecture">
+<h2>System Architecture<a class="headerlink" href="#system-architecture" title="Permalink to this headline">¶</a></h2>
+<p><img alt="../_images/channel-arch.png" src="../_images/channel-arch.png" />
+Figure above depicts the high-level architecture of Celer state channel network. A primary design decision is to decouple the payment and app state channels in order to significantly reduce the complexity and improve the scalability of the whole system. As shown in the figure, there are three key components in the system: <em>CelerPay</em>, <em>CelerApp</em>, and <em>CelerNode</em>.</p>
+<p><strong>CelerPay</strong> is the generalized payment channel that supports efficient off-chain token transfer with arbitrary conditions on on-chain verifiable states. It consists of a set of on-chain smart contracts and off-chain communication protocols. The shared smart contracts maintain the minimum required on-chain states for each pair of channel peers. The off-chain protocols specify how peers update and exchange off-chain states, and when to make the rare on-chain function calls. CelerPay channels are the edges of the state channel network. An off-chain payment can be multi-hop and traverse through multiple CelerPay channels.</p>
+<p><strong>CelerApps</strong> are generic state channels that can express any application logic. They expose the standard query APIs required by CelerPay, so that payment conditions can be based on CelerApp outcomes. Dashed lines in the figure above indicate CelerApps could be <em>virtual</em> modules. An app contract can be either initially deployed once by the developer and shared by all the future players; or used as a one-time <em>virtual contract</em> for fixed session participants (e.g., <em>A</em> and <em>D</em> in the figure) without on-chain deployment unless dispute happens. The CelerApp off-chain channel is always virtual, as no on-chain initialization (e.g., OpenChannel transaction) is required. As a result, CelerApp peers can directly communicate with each other without multi-hop state forwarding.</p>
+<p><strong>CelerNodes</strong> are the endpoints that run the state channel protocol of CelerPay and CelerApps. A node can join the state channel network by setting up a CelerPay channel with another node in the network. Once the CelerNode joins the network, it can send off-chain payments to any other nodes in the network. Though the Celer state channel technical architecture supports a homogeneous P2P network, we envision in real-world cases there will be two types of CelerNodes (running the same protocol) with different goals and characteristics:</p>
+<ul class="simple">
+<li><strong>Off-chain Service Provider (OSP)</strong> is always online to relay payments for their peers. An OSP usually has more capital reserve to open CelerPay channels with many peers, and strong technical capability to maintain a highly available and reliable service.</li>
+<li><strong>Client</strong> uses the state channel services. A client only needs to open a CelerPay channel with an OSP to become a leaf of the network. It can have as many virtual CelerApp channels with any other nodes, while all payments of the same token type will go through the same CelerPay channel with its OSP. A client could be offline when not using the services.</li>
+</ul>
+<p><strong>Note on decoupled architecture.</strong> Throughout the documentation, a topic that will be revisited many times is the <em>decoupled architecture</em>. CelerPay and CelerApp are loosely connected through the simple conditional dependency interface. This allows CelerPay use cases to go significantly beyond state channel applications, because off-chain conditional payment sent through the CelerPay network can be resolved as long as there is an on-chain verifiable conditional state. Some immediate use cases include sending a conditional payment with dependency on an outcome from an on-chain oracle, a smart-contract, or a layer-2 commit-chain.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="design-principles">
+<h2>Design Principles<a class="headerlink" href="#design-principles" title="Permalink to this headline">¶</a></h2>
+<p>Our goal is to build a high-performance and cost-efficient dApp platform and value transfer network, with no compromise on the security or trust-free guarantee. The protocol design should follow a careful analysis of activity, cost, and failure patterns in real-world application platforms. We hold several design principles as below when building the Celer state channel network. Though every principle is critical to the system, there are still minor trade-offs need to be made when different principles slightly conflict with each other. Below we list them <em>in the order of priority</em>.</p>
+<div class="section" id="minimize-on-chain-footprint">
+<h3>Minimize on-chain footprint<a class="headerlink" href="#minimize-on-chain-footprint" title="Permalink to this headline">¶</a></h3>
+<p>On-chain transactions are expensive and slow, so the top priority is to make state transitions always stay off-chain, and only resort to on-chain operation when absolutely necessary (e.g., when two parties disagree on a state, or deposit/withdraw fund to/from the channel).</p>
+<p>Another important aspect is to minimize the cost of each on-chain operation through deep smart contract optimization. Some common practices (ranked by importance) includes avoiding contract deployment by users, minimizing the number of transactions per business-level operation, minimizing on-chain storage per channel.</p>
+</div>
+<div class="section" id="minimize-relay-node-on-chain-interaction">
+<h3>Minimize relay node on-chain interaction<a class="headerlink" href="#minimize-relay-node-on-chain-interaction" title="Permalink to this headline">¶</a></h3>
+<p>One essential lesson we learned from building various large-scale robust distributed systems is to push the complexity to the edge, which also applies to building a robust state channel network. The off-chain protocol should make sure the intermediate nodes have minimal possibilities to perform on-chain transactions or view function calls when relaying off-chain payments, and push the responsibilities of on-chain dispute to the end-to-end payment sender/receiver and app users. This end-to-end principle makes the network much easier to scale and defend against malicious attacks.</p>
+</div>
+<div class="section" id="minimize-on-chain-view-calls">
+<h3>Minimize on-chain view calls<a class="headerlink" href="#minimize-on-chain-view-calls" title="Permalink to this headline">¶</a></h3>
+<p>People may have the illusion that on-chain view calls are free and can be used whenever they want. Actually on-chain view calls can quickly become a bottleneck if not used carefully when running an off-chain service in production, mainly for two reasons: 1) from a cost perspective, most entities have to rely on other services like <a class="reference external" href="https://infura.io/">Infura</a> or <a class="reference external" href="https://alchemyapi.io/">Alchemy</a> to view on-chain information, and have to pay them in order to receive a high-throughput and reliable service; 2) from a performance perspective, on-chain view calls are often much slower than fetching data from local storage servers or exchanging information with state channel peers.</p>
+</div>
+<div class="section" id="minimize-off-chain-communication-overhead">
+<h3>Minimize off-chain communication overhead<a class="headerlink" href="#minimize-off-chain-communication-overhead" title="Permalink to this headline">¶</a></h3>
+<p>Though off-chain communication is much faster than on-chain interaction, it still needs to be optimized for better performance and reliability. There are two major overheads to be minimized for each business-level operation: <em>message round trip</em> and the <em>storage IO</em>. The detailed off-chain protocols are described in later <a class="reference internal" href="pay_protocol.html"><span class="doc">CelerPay off-chain</span></a> and <a class="reference internal" href="app.html"><span class="doc">CelerApp</span></a> sections</p>
+</div>
+<div class="section" id="enable-low-cost-decentralized-system-upgrade">
+<h3>Enable low-cost decentralized system upgrade<a class="headerlink" href="#enable-low-cost-decentralized-system-upgrade" title="Permalink to this headline">¶</a></h3>
+<p>One common issue about layer-1 blockchains is the great difficulty to upgrade since it requires global consensus. State channel has the advantage to be able to perform per-channel upgrade as long as all the channel peers agree. However, if not well designed, this upgrade process may still be annoying, which could involve multiple on-chain transitions and long off-chain downtime per channel. Celer enables zero-downtime and low-cost system upgrade through structured contract design and the use of protobuf, which will be detailed in later sections.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="platform-interoperability">
+<h2>Platform Interoperability<a class="headerlink" href="#platform-interoperability" title="Permalink to this headline">¶</a></h2>
+<p>Celer Network aims to become a platform-independent layer-2 scaling platform running across different layer-1 blockchains that support smart contracts. Therefore, we need to design data structure and object interaction logic that works for different blockchains, frameworks, and programming languages. A key design choice to serve this purpose is to use <a class="reference external" href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a> (protobuf) to represent all the core data structures.</p>
+<p>Celer uses protobuf to serialize and deserialize messages exchanged during communication among off-chain nodes and interaction between off-chain nodes and on-chain contracts. Although platform-specific smart contract languages such as Solidity provides their own ABI encoding and decoding functions,
+we choose to use protobuf for its proven flexibility, efficiency, extensibility, and platform neutrality.
+With protobuf, Celer core data structures can be seamlessly used in off-chain communication protocols and instantly extended to other blockchains that we plan to support.</p>
+<div class="section" id="protobuf-messages">
+<h3>Protobuf Messages<a class="headerlink" href="#protobuf-messages" title="Permalink to this headline">¶</a></h3>
+<p>In order to support cross-platform interoperability, Celer components at different platforms need to support the same set of protobuf messages, which can be categorized into four groups:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/celer-network/cChannel-eth/blob/master/contracts/lib/data/proto/chain.proto">chain.proto</a> is used only for interactions with CelerPay on-chain smart contracts.</li>
+<li><a class="reference external" href="https://github.com/celer-network/cChannel-eth/blob/master/contracts/lib/data/proto/entity.proto">entity.proto</a> has CelerPay core data structures for both on-chain and off-chain communications.</li>
+<li><a class="reference external" href="https://github.com/celer-network/goCeler-oss/blob/master/proto/message.proto">message.proto</a> is used only for CelerPay off-chain communication.</li>
+<li><a class="reference external" href="https://github.com/celer-network/cApps-eth/blob/master/contracts/lib/proto/app.proto">app.proto</a> is used for CelerApp on-chain and off-chain communications.</li>
+</ul>
+<p>The definition and usage of these protobuf messages will be described in later sections.</p>
+<div class="section" id="protobuf-add-ons">
+<h4>Protobuf add-ons<a class="headerlink" href="#protobuf-add-ons" title="Permalink to this headline">¶</a></h4>
+<p>There are plenty of <a class="reference external" href="http://bit.ly/2mlpXzg">protobuf add-ons</a> which cover most of the popular languages that are suitable to build our off-chain systems. However, there was no such add-on for Solidity, which we use to implement our solutions on Ethereum. Hence we implemented a <a class="reference external" href="https://github.com/celer-network/pb3-gen-sol">Solidity library generator</a> to decode proto3 messages within Solidity smart contracts efficiently. It supports proto3 native types and uses field option for Solidity native types.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pay_contracts.html" class="btn btn-neutral float-right" title="CelerPay On-Chain Contracts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../intro/introduction.html" class="btn btn-neutral float-left" title="Layer-2 Blockchain Scaling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Celer Network
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
