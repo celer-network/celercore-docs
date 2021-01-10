@@ -42,7 +42,7 @@ Anyone can initiate itself as a validator candidate on the mainchain contract. I
 When submitting the `initializeCandidate` transaction, a validator candidate needs to specify a few parameters to help delegators to decide whether to stake on this pool:
 - `min_self_stake` : Minimum amount of CELR from the validator itself to be staked in the pool. The staking pool will be unbonded if the validator's self-delegated stake falls below this limit.
 - `commission_rate` : The commission rate on the staking rewards to its delegators. This value can only be updated after the lock end date specified below. When the validator wants to increase the rate, it also needs to announce the update two weeks before the new rate takes effect.
-- `rate_lock_end_date` : The date until which the commission rate will be locked. This value can be updated anytime after initialization, but must be be monotonic increasing.
+- `rate_lock_end_time` : The mainchain block time until which the commission rate will be locked. This value can be updated anytime after initialization, but must be be monotonic increasing.
 
 After the candidate is initialized, it should submit a `updateSidechainAddr` transaction to the SGN contract to claim its sidechain node address. When the candidate is eligible to become a bonded validator, it should call the `claimValidator` function to trigger the mainchain state transition.
 

@@ -230,7 +230,7 @@
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">min_self_stake</span></code> : Minimum amount of CELR from the validator itself to be staked in the pool. The staking pool will be unbonded if the validator’s self-delegated stake falls below this limit.</li>
 <li><code class="docutils literal notranslate"><span class="pre">commission_rate</span></code> : The commission rate on the staking rewards to its delegators. This value can only be updated after the lock end date specified below. When the validator wants to increase the rate, it also needs to announce the update two weeks before the new rate takes effect.</li>
-<li><code class="docutils literal notranslate"><span class="pre">rate_lock_end_date</span></code> : The date until which the commission rate will be locked. This value can be updated anytime after initialization, but must be be monotonic increasing.</li>
+<li><code class="docutils literal notranslate"><span class="pre">rate_lock_end_time</span></code> : The mainchain block time until which the commission rate will be locked. This value can be updated anytime after initialization, but must be be monotonic increasing.</li>
 </ul>
 <p>After the candidate is initialized, it should submit a <code class="docutils literal notranslate"><span class="pre">updateSidechainAddr</span></code> transaction to the SGN contract to claim its sidechain node address. When the candidate is eligible to become a bonded validator, it should call the <code class="docutils literal notranslate"><span class="pre">claimValidator</span></code> function to trigger the mainchain state transition.</p>
 </div>
